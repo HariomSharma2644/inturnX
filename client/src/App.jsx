@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import Header from './components/Header';
 import Home from './components/Home';
 import Login from './components/Login';
 import Signup from './components/Signup';
@@ -14,8 +15,11 @@ import Internships from './components/Internships';
 import Community from './components/Community';
 import AdminPanel from './components/AdminPanel';
 import ResumeAnalyzer from './components/ResumeAnalyzer';
+import MockInterview from './components/MockInterview';
 import Quiz from './components/Quiz';
 import ApiTest from './components/ApiTest';
+import ProfilePage from './components/ProfilePage';
+import AuthCallback from './components/AuthCallback';
 
 // Protected Route component
 const ProtectedRoute = ({ children }) => {
@@ -23,13 +27,17 @@ const ProtectedRoute = ({ children }) => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0A0A0A] to-[#1A1A1A]">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-[#14A44D] mx-auto mb-4"></div>
+          <div className="text-white text-lg font-semibold">Loading InturnX...</div>
+          <div className="text-gray-400 text-sm mt-2">Please wait while we prepare your experience</div>
+        </div>
       </div>
     );
   }
 
-  return isAuthenticated ? children : <Navigate to="/login" />;
+  return isAuthenticated ? children : <Navigate to="/login" replace />;
 };
 
 // Public Route component (redirects to dashboard if already authenticated)
@@ -38,13 +46,22 @@ const PublicRoute = ({ children }) => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0A0A0A] to-[#1A1A1A]">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-[#14A44D] mx-auto mb-4"></div>
+          <div className="text-white text-lg font-semibold">Loading InturnX...</div>
+          <div className="text-gray-400 text-sm mt-2">Please wait while we prepare your experience</div>
+        </div>
       </div>
     );
   }
 
-  return isAuthenticated ? <Navigate to="/" /> : children;
+  // Redirect authenticated users to dashboard from login/signup pages
+  if (isAuthenticated && (window.location.pathname === '/login' || window.location.pathname === '/signup')) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  return children;
 };
 
 function App() {
@@ -52,6 +69,7 @@ function App() {
     <AuthProvider>
       <Router>
         <div className="App">
+          <Header />
           <Routes>
             {/* Public routes */}
             <Route path="/" element={<Home />} />
@@ -70,6 +88,18 @@ function App() {
                   <Signup />
                 </PublicRoute>
               }
+            />
+
+            {/* Landing page route for authenticated users */}
+            <Route
+              path="/home"
+              element={<Home />}
+            />
+
+            {/* OAuth callback route */}
+            <Route
+              path="/auth/callback"
+              element={<AuthCallback />}
             />
 
             {/* Protected routes */}
@@ -146,10 +176,10 @@ function App() {
               }
             />
             <Route
-              path="/resume-analyzer"
+              path="/mock-interview"
               element={
                 <ProtectedRoute>
-                  <ResumeAnalyzer />
+                  <MockInterview />
                 </ProtectedRoute>
               }
             />
@@ -158,6 +188,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Quiz />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <ProfilePage />
                 </ProtectedRoute>
               }
             />

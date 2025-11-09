@@ -1,20 +1,47 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import FloatingBlobs from "./FloatingBlobs";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 export default function Home() {
   const { demoLogin, isAuthenticated } = useAuth();
-  const navigate = useNavigate();
 
-  // Redirect to dashboard if already logged in
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate('/dashboard');
-    }
-  }, [isAuthenticated, navigate]);
   const [currentStat, setCurrentStat] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const observerRef = useRef(null);
+
+  // Simulate loading for smooth animation
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoaded(true);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Scroll reveal animation
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('reveal');
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
+    );
+
+    observerRef.current = observer;
+
+    const elements = document.querySelectorAll('.scroll-reveal');
+    elements.forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, []);
+
+  // Allow authenticated users to view the home page
+  // Remove redirect to dashboard
 
   const stats = [
     { number: 5000, label: "Active Learners", suffix: "+" },
@@ -28,14 +55,14 @@ export default function Home() {
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true);
-          // Animate stats
+          // Animate stats with smoother intervals
           const interval = setInterval(() => {
             setCurrentStat(prev => {
               if (prev < stats.length - 1) return prev + 1;
               clearInterval(interval);
               return prev;
             });
-          }, 2000);
+          }, 1500); // Faster, smoother animation
         }
       },
       { threshold: 0.1 }
@@ -45,7 +72,7 @@ export default function Home() {
     if (statsSection) observer.observe(statsSection);
 
     return () => observer.disconnect();
-  }, []);
+  }, [stats.length]);
 
   const handleDemoLogin = async () => {
     const result = await demoLogin();
@@ -57,11 +84,11 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0A0A0A] to-[#1A1A1A] text-white overflow-hidden">
+    <div className={`min-h-screen bg-gradient-to-br from-[#0A0A0A] to-[#1A1A1A] text-white overflow-hidden transition-opacity duration-500 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
       <FloatingBlobs />
 
       {/* Hero Section */}
-      <section className="relative h-screen flex flex-col items-center justify-center text-center bg-[#0A0A0A] overflow-hidden">
+      <section className="relative h-screen flex flex-col items-center justify-center text-center bg-[#0A0A0A] overflow-hidden pt-20">
         {/* Background overlay to improve contrast */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 to-black/80 z-0"></div>
 
@@ -70,7 +97,7 @@ export default function Home() {
         <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-[#5F2EEA]/25 blur-[140px] rounded-full z-0 animate-pulse"></div>
 
         {/* Foreground content */}
-        <div className="relative z-10 px-6">
+        <div className={`relative z-10 px-6 transition-all duration-1000 ${isLoaded ? 'transform translate-y-0 opacity-100' : 'transform translate-y-8 opacity-0'}`}>
           <div className="mb-6">
             <span className="inline-block bg-[#14A44D]/20 text-[#14A44D] px-4 py-2 rounded-full text-sm font-medium mb-4">
               🚀 AI-Powered Learning Platform
@@ -112,53 +139,62 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              to="/signup"
-              className="bg-gradient-to-r from-[#14A44D] to-[#5F2EEA] hover:from-[#14A44D]/80 hover:to-[#5F2EEA]/80 px-8 py-4 rounded-full text-lg font-semibold shadow-lg hover:shadow-[#14A44D]/40 transition-all duration-300 transform hover:scale-105"
-            >
-              Start Your Journey
-            </Link>
-            <Link
-              to="/login"
-              className="border-2 border-[#14A44D] text-[#14A44D] hover:bg-[#14A44D] hover:text-white px-8 py-4 rounded-full text-lg font-semibold transition-all duration-300 transform hover:scale-105"
-            >
-              Sign In
-            </Link>
-            <button
-              onClick={handleDemoLogin}
-              className="bg-gradient-to-r from-[#FF4B2B] to-[#FF8E53] hover:from-[#FF4B2B]/80 hover:to-[#FF8E53]/80 px-8 py-4 rounded-full text-lg font-semibold shadow-lg hover:shadow-[#FF4B2B]/40 transition-all duration-300 transform hover:scale-105"
-            >
-              Try Demo
-            </button>
+          <div className={`flex flex-col sm:flex-row gap-4 justify-center transition-all duration-1000 delay-700 ${isLoaded ? 'transform translate-y-0 opacity-100' : 'transform translate-y-4 opacity-0'}`}>
+            {isAuthenticated ? (
+              <Link
+                to="/dashboard"
+                className="bg-gradient-to-r from-[#14A44D] to-[#5F2EEA] hover:from-[#14A44D]/80 hover:to-[#5F2EEA]/80 px-8 py-4 rounded-full text-lg font-semibold shadow-lg hover:shadow-[#14A44D]/40 transition-all duration-300 transform hover:scale-105 animate-pulse"
+              >
+                Go to Dashboard
+              </Link>
+            ) : (
+              <>
+                <Link
+                  to="/signup"
+                  className="bg-gradient-to-r from-[#14A44D] to-[#5F2EEA] hover:from-[#14A44D]/80 hover:to-[#5F2EEA]/80 px-8 py-4 rounded-full text-lg font-semibold shadow-lg hover:shadow-[#14A44D]/40 transition-all duration-300 transform hover:scale-105"
+                >
+                  Start Your Journey
+                </Link>
+                <Link
+                  to="/login"
+                  className="border-2 border-[#14A44D] text-[#14A44D] hover:bg-[#14A44D] hover:text-white px-8 py-4 rounded-full text-lg font-semibold transition-all duration-300 transform hover:scale-105"
+                >
+                  Sign In
+                </Link>
+                <button
+                  onClick={handleDemoLogin}
+                  className="bg-gradient-to-r from-[#FF4B2B] to-[#FF8E53] hover:from-[#FF4B2B]/80 hover:to-[#FF8E53]/80 px-8 py-4 rounded-full text-lg font-semibold shadow-lg hover:shadow-[#FF4B2B]/40 transition-all duration-300 transform hover:scale-105"
+                >
+                  Try Demo
+                </button>
+              </>
+            )}
           </div>
         </div>
 
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-10 flex flex-col items-center gap-2 opacity-80 z-10">
-          <div className="w-[24px] h-[40px] border-2 border-white/70 rounded-full relative overflow-hidden">
-            <div className="absolute top-2 left-1/2 w-2 h-2 bg-white rounded-full animate-bounce"></div>
-          </div>
-          <p className="text-xs text-gray-400">Scroll to explore</p>
-        </div>
       </section>
 
       {/* Stats Section */}
-      <section id="stats-section" className="py-20 bg-black/20 backdrop-blur-sm">
+      <section id="stats-section" className={`py-20 bg-black/20 backdrop-blur-sm transition-all duration-1000 delay-300 ${isLoaded ? 'transform translate-y-0 opacity-100' : 'transform translate-y-8 opacity-0'}`}>
         <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+              Our Impact in Numbers
+            </h2>
+          </div>
           <div className="grid md:grid-cols-4 gap-8">
             {stats.map((stat, index) => (
               <div key={index} className="text-center">
-                <div className="text-4xl md:text-5xl font-bold text-[#14A44D] mb-2">
+                <div className="text-4xl md:text-5xl font-bold text-[#14A44D] mb-2 transition-all duration-1000 ease-out">
                   {isVisible && index <= currentStat ? (
-                    <span className="counter">
+                    <span className="counter animate-fade-in-up">
                       {stat.number.toLocaleString()}{stat.suffix}
                     </span>
                   ) : (
-                    <span>0{stat.suffix}</span>
+                    <span className="animate-fade-in">0{stat.suffix}</span>
                   )}
                 </div>
-                <p className="text-gray-300 text-lg">{stat.label}</p>
+                <p className="text-gray-300 text-lg transition-all duration-500 delay-300">{stat.label}</p>
               </div>
             ))}
           </div>
@@ -168,7 +204,7 @@ export default function Home() {
       {/* How It Works Section */}
       <section className="py-20 bg-gradient-to-b from-black/20 to-black/40">
         <div className="container mx-auto px-6">
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+          <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent scroll-reveal">
             How InturnX Works
           </h2>
 
@@ -224,14 +260,14 @@ export default function Home() {
         </div>
       </section>
 
-      {/* AI Features Section */}
-      <section className="py-20 bg-black/20 backdrop-blur-sm">
+      {/* Features Section */}
+      <section id="features" className="py-20 bg-black/20 backdrop-blur-sm section-fade-in will-change-transform">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent scroll-reveal">
               Powered by Advanced AI
             </h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto scroll-reveal">
               InturnX leverages cutting-edge open-source AI models to provide personalized learning experiences
             </p>
           </div>
@@ -264,10 +300,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-20 bg-gradient-to-b from-black/40 to-black/20">
+      {/* Why Choose InturnX Section */}
+      <section id="about" className="py-20 bg-gradient-to-b from-black/40 to-black/20 section-fade-in will-change-transform">
         <div className="container mx-auto px-6">
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+          <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent scroll-reveal">
             Why Choose InturnX?
           </h2>
 
@@ -315,9 +351,9 @@ export default function Home() {
       </section>
 
       {/* Tech Stack Section */}
-      <section className="py-20 bg-black/20 backdrop-blur-sm">
+      <section className="py-20 bg-black/20 backdrop-blur-sm section-fade-in will-change-transform">
         <div className="container mx-auto px-6">
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+          <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent scroll-reveal">
             Built with Modern Technology
           </h2>
 
@@ -350,9 +386,9 @@ export default function Home() {
       </section>
 
       {/* Testimonials Section */}
-      <section className="py-20 bg-gradient-to-b from-black/20 to-black/40">
+      <section id="testimonials" className="py-20 bg-gradient-to-b from-black/20 to-black/40 section-fade-in will-change-transform">
         <div className="container mx-auto px-6">
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+          <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent scroll-reveal">
             What Our Students Say
           </h2>
 
@@ -415,12 +451,12 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-[#FF4B2B]/20 to-[#5F2EEA]/20 backdrop-blur-sm">
+      <section className="py-20 bg-gradient-to-r from-[#FF4B2B]/20 to-[#5F2EEA]/20 backdrop-blur-sm section-fade-in will-change-transform">
         <div className="container mx-auto px-6 text-center">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+          <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent scroll-reveal">
             Ready to Transform Your Coding Journey?
           </h2>
-          <p className="text-xl text-gray-200 mb-10 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-200 mb-10 max-w-3xl mx-auto scroll-reveal">
             Join thousands of students who are already learning smarter, coding better, and building brighter futures with InturnX.
           </p>
 

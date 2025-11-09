@@ -153,4 +153,50 @@ const getProfile = async (req, res) => {
   }
 };
 
-module.exports = { signup, login, getProfile, createDemoAccount };
+const updateProfile = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { name, email, bio, skills, github, linkedin, portfolio, location, role } = req.body;
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      {
+        name,
+        email,
+        bio,
+        skills,
+        github,
+        linkedin,
+        portfolio,
+        location,
+        role
+      },
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.json({
+      message: 'Profile updated successfully',
+      user: {
+        id: updatedUser._id,
+        name: updatedUser.name,
+        email: updatedUser.email,
+        role: updatedUser.role,
+        bio: updatedUser.bio,
+        skills: updatedUser.skills,
+        github: updatedUser.github,
+        linkedin: updatedUser.linkedin,
+        portfolio: updatedUser.portfolio,
+        location: updatedUser.location
+      }
+    });
+  } catch (error) {
+    console.error('Update profile error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+module.exports = { signup, login, getProfile, createDemoAccount, updateProfile };

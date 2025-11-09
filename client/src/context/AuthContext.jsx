@@ -105,6 +105,21 @@ export const AuthProvider = ({ children }) => {
     delete axios.defaults.headers.common['Authorization'];
   };
 
+  // Handle OAuth callback
+  const handleOAuthCallback = (token, provider) => {
+    if (token) {
+      localStorage.setItem('token', token);
+      setToken(token);
+
+      // Fetch user data after setting token
+      axios.get('/api/auth/profile').then(response => {
+        setUser(response.data.user);
+      }).catch(error => {
+        console.error('Failed to fetch user after OAuth:', error);
+      });
+    }
+  };
+
   const value = {
     user,
     token,
@@ -113,6 +128,7 @@ export const AuthProvider = ({ children }) => {
     signup,
     demoLogin,
     logout,
+    handleOAuthCallback,
     isAuthenticated: !!user
   };
 

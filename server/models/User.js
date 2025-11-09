@@ -8,18 +8,22 @@ const userSchema = new mongoose.Schema({
   },
   email: {
     type: String,
-    required: true,
+    required: function() {
+      return !this.oauthProvider || this.oauthProvider === 'local';
+    },
     unique: true,
     lowercase: true,
     trim: true
   },
   password: {
     type: String,
-    required: true
+    required: function() {
+      return !this.oauthProvider || this.oauthProvider === 'local';
+    }
   },
   role: {
     type: String,
-    enum: ['student', 'admin'],
+    enum: ['student', 'developer', 'mentor', 'recruiter'],
     default: 'student'
   },
   xp: {
@@ -39,6 +43,42 @@ const userSchema = new mongoose.Schema({
   resumeLink: {
     type: String,
     default: ''
+  },
+  bio: {
+    type: String,
+    maxlength: 500
+  },
+  github: {
+    type: String
+  },
+  linkedin: {
+    type: String
+  },
+  portfolio: {
+    type: String
+  },
+  location: {
+    type: String
+  },
+  // OAuth fields
+  githubId: {
+    type: String,
+    sparse: true
+  },
+  googleId: {
+    type: String,
+    sparse: true
+  },
+  linkedinId: {
+    type: String,
+    sparse: true
+  },
+  oauthProvider: {
+    type: String,
+    enum: ['local', 'github', 'google', 'linkedin']
+  },
+  avatar: {
+    type: String
   }
 }, {
   timestamps: true
