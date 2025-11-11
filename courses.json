@@ -1,0 +1,1553 @@
+
+[
+    {
+        "title": "AWS Cloud Fundamentals",
+        "level": "Beginner",
+        "duration": 4,
+        "description": "This course provides a foundational understanding of Amazon Web Services (AWS), its core services, and the value it brings to businesses. Students will learn about cloud concepts, AWS services, security, architecture, pricing, and support.",
+        "modules": [
+            {
+                "title": "Introduction to Cloud Computing and AWS",
+                "lesson": "Learn the fundamentals of cloud computing and the history of AWS. Understand the benefits of cloud computing and the different cloud computing models.",
+                "video": "https://example.com/video-lesson1"
+            },
+            {
+                "title": "Core AWS Services",
+                "lesson": "Explore core AWS services such as EC2, S3, VPC, and IAM. Learn how to launch a virtual server, store data, and manage network security.",
+                "video": "https://example.com/video-lesson2"
+            },
+            {
+                "title": "AWS Security and Compliance",
+                "lesson": "Understand the AWS shared responsibility model and learn about key security services like IAM, KMS, and AWS Shield.",
+                "video": "https://example.com/video-lesson3"
+            },
+            {
+                "title": "AWS Pricing and Support",
+                "lesson": "Learn how AWS pricing works and how to use the AWS Free Tier. Explore the different AWS support plans available.",
+                "video": "https://example.com/video-lesson4"
+            }
+        ],
+        "quiz": [
+            {
+                "question": "What does EC2 stand for?",
+                "options": ["Elastic Cloud Compute", "Elastic Compute Cloud", "Electric Cloud Computer", "Electronic Compute Cloud"],
+                "answer": "Elastic Compute Cloud"
+            },
+            {
+                "question": "Which service is used for object storage in AWS?",
+                "options": ["S3", "EC2", "VPC", "IAM"],
+                "answer": "S3"
+            },
+            {
+                "question": "What is the AWS shared responsibility model?",
+                "options": ["AWS is responsible for all security.", "The customer is responsible for all security.", "AWS is responsible for security 'of' the cloud, and the customer is responsible for security 'in' the cloud.", "Security is not a concern in the cloud."],
+                "answer": "AWS is responsible for security 'of' the cloud, and the customer is responsible for security 'in' the cloud."
+            }
+        ],
+        "certificateDetails": {
+            "title": "InturnX Certified AWS Cloud Practitioner",
+            "issuer": "InturnX",
+            "criteria": "Complete all lessons and score >= 70% in the quiz."
+        }
+    },
+    {
+        "title": "Google Cloud Basics",
+        "level": "Beginner",
+        "duration": 4,
+        "description": "This course introduces Google Cloud Platform (GCP) and its core infrastructure and services. Participants will learn about computing, storage, databases, and networking in the Google Cloud.",
+        "modules": [
+            {
+                "title": "Introduction to Google Cloud",
+                "lesson": "Get an overview of Google Cloud Platform, its global infrastructure, and key differentiators.",
+                "video": "https://example.com/gcp-lesson1"
+            },
+            {
+                "title": "Core GCP Services",
+                "lesson": "Learn about Compute Engine, Cloud Storage, and Virtual Private Cloud (VPC) networks.",
+                "video": "https://example.com/gcp-lesson2"
+            },
+            {
+                "title": "Identity and Access Management (IAM)",
+                "lesson": "Understand how to manage users, roles, and permissions in GCP using Cloud IAM.",
+                "video": "https://example.com/gcp-lesson3"
+            },
+            {
+                "title": "GCP Pricing and Billing",
+                "lesson": "Learn about GCP's pricing philosophy, billing accounts, and how to estimate costs.",
+                "video": "https://example.com/gcp-lesson4"
+            }
+        ],
+        "quiz": [
+            {
+                "question": "What is the equivalent of AWS EC2 in Google Cloud?",
+                "options": ["Cloud Storage", "Compute Engine", "BigQuery", "Cloud Spanner"],
+                "answer": "Compute Engine"
+            },
+            {
+                "question": "Which GCP service is used for object storage?",
+                "options": ["Cloud SQL", "Cloud Storage", "Compute Engine", "Cloud Functions"],
+                "answer": "Cloud Storage"
+            },
+            {
+                "question": "What does VPC stand for in the context of Google Cloud?",
+                "options": ["Virtual Private Cloud", "Virtual Public Cloud", "Volatile Private Cloud", "Virtual Personal Computer"],
+                "answer": "Virtual Private Cloud"
+            }
+        ],
+        "certificateDetails": {
+            "title": "InturnX Certified Google Cloud Associate",
+            "issuer": "InturnX",
+            "criteria": "Complete all lessons and score >= 70% in the quiz."
+        }
+    },
+    {
+        "title": "Microsoft Azure Essentials",
+        "level": "Beginner",
+        "duration": 4,
+        "description": "This course provides a comprehensive introduction to Microsoft Azure. Students will learn about core Azure services, solutions, and management tools, preparing them for the AZ-900 exam.",
+        "modules": [
+            {
+                "title": "Introduction to Azure",
+                "lesson": "Discover the fundamentals of cloud computing and how Microsoft Azure fits into the picture. Learn about the benefits and economies of scale.",
+                "video": "https://example.com/azure-lesson1"
+            },
+            {
+                "title": "Core Azure Services",
+                "lesson": "Explore Azure's core services, including Virtual Machines, Blob Storage, and Azure Virtual Networks.",
+                "video": "https://example.com/azure-lesson2"
+            },
+            {
+                "title": "Azure Security, Privacy, and Trust",
+                "lesson": "Learn about Azure's security features, privacy policies, and how to manage compliance.",
+                "video": "https://example.com/azure-lesson3"
+            },
+            {
+                "title": "Azure Pricing and Support",
+                "lesson": "Understand Azure's pricing models, subscriptions, and the support options available to customers.",
+                "video": "https://example.com/azure-lesson4"
+            }
+        ],
+        "quiz": [
+            {
+                "question": "What is the name of Azure's virtual machine service?",
+                "options": ["Azure VMs", "Virtual Machines", "Azure Compute", "Azure EC2"],
+                "answer": "Virtual Machines"
+            },
+            {
+                "question": "Which Azure service is used for storing large amounts of unstructured data?",
+                "options": ["Azure SQL Database", "Azure Cosmos DB", "Blob Storage", "Azure Files"],
+                "answer": "Blob Storage"
+            },
+            {
+                "question": "What is the foundational service for networking in Azure?",
+                "options": ["Azure ExpressRoute", "Azure DNS", "Azure Virtual Network", "Azure Load Balancer"],
+                "answer": "Azure Virtual Network"
+            }
+        ],
+        "certificateDetails": {
+            "title": "InturnX Certified Azure Fundamentals Practitioner",
+            "issuer": "InturnX",
+            "criteria": "Complete all lessons and score >= 70% in the quiz."
+        }
+    },
+    {
+        "title": "DevOps Foundations",
+        "level": "Intermediate",
+        "duration": 5,
+        "description": "This course provides a strong foundation in DevOps principles and practices. You will learn about the DevOps lifecycle, culture, and the key tools and technologies used in modern software development and operations.",
+        "modules": [
+            {
+                "title": "Introduction to DevOps",
+                "lesson": "Understand the core concepts of DevOps, its benefits, and how it improves collaboration between development and operations teams.",
+                "video": "https://example.com/devops-lesson1"
+            },
+            {
+                "title": "Continuous Integration and Continuous Delivery (CI/CD)",
+                "lesson": "Learn how to automate the build, test, and deployment process using CI/CD pipelines.",
+                "video": "https://example.com/devops-lesson2"
+            },
+            {
+                "title": "Infrastructure as Code (IaC)",
+                "lesson": "Explore the practice of managing and provisioning infrastructure through code using tools like Terraform and Ansible.",
+                "video": "https://example.com/devops-lesson3"
+            },
+            {
+                "title": "Monitoring and Logging",
+                "lesson": "Learn how to monitor application performance and troubleshoot issues using logging and monitoring tools.",
+                "video": "https://example.com/devops-lesson4"
+            },
+            {
+                "title": "DevOps Culture and Best Practices",
+                "lesson": "Understand the cultural shift required for a successful DevOps transformation and learn about key best practices.",
+                "video": "https://example.com/devops-lesson5"
+            }
+        ],
+        "quiz": [
+            {
+                "question": "What are the three core pillars of DevOps?",
+                "options": ["People, Process, and Technology", "Speed, Quality, and Cost", "Development, Operations, and Testing", "Agile, Scrum, and Kanban"],
+                "answer": "People, Process, and Technology"
+            },
+            {
+                "question": "What is the primary goal of CI/CD?",
+                "options": ["To manually deploy code to production.", "To automate the software delivery process.", "To write more code.", "To reduce the number of bugs."],
+                "answer": "To automate the software delivery process."
+            },
+            {
+                "question": "Which of the following is an example of an IaC tool?",
+                "options": ["Jenkins", "Git", "Terraform", "Docker"],
+                "answer": "Terraform"
+            }
+        ],
+        "certificateDetails": {
+            "title": "InturnX Certified DevOps Professional",
+            "issuer": "InturnX",
+            "criteria": "Complete all lessons and score >= 70% in the quiz."
+        }
+    },
+    {
+        "title": "Docker & Containerization",
+        "level": "Intermediate",
+        "duration": 3,
+        "description": "This course provides a comprehensive introduction to Docker and containerization. You will learn how to create, manage, and deploy applications using Docker containers.",
+        "modules": [
+            {
+                "title": "Introduction to Containers and Docker",
+                "lesson": "Understand the difference between containers and virtual machines and learn the basics of Docker.",
+                "video": "https://example.com/docker-lesson1"
+            },
+            {
+                "title": "Docker Images and Containers",
+                "lesson": "Learn how to build Docker images and run Docker containers.",
+                "video": "https://example.com/docker-lesson2"
+            },
+            {
+                "title": "Docker Networking and Storage",
+                "lesson": "Explore Docker networking concepts and learn how to manage data in Docker containers.",
+                "video": "https://example.com/docker-lesson3"
+            }
+        ],
+        "quiz": [
+            {
+                "question": "What is a Docker image?",
+                "options": ["A running instance of a container.", "A lightweight, standalone, executable package of software that includes everything needed to run an application.", "A file that describes the services, networks, and volumes for a Docker application.", "A tool for managing and orchestrating containers."],
+                "answer": "A lightweight, standalone, executable package of software that includes everything needed to run an application."
+            },
+            {
+                "question": "What is the command to build a Docker image?",
+                "options": ["docker run", "docker build", "docker push", "docker pull"],
+                "answer": "docker build"
+            },
+            {
+                "question": "What is a Dockerfile?",
+                "options": ["A file that contains a list of running containers.", "A text document that contains all the commands a user could call on the command line to assemble an image.", "A file that describes the services, networks, and volumes for a Docker application.", "A file that contains the logs of a container."],
+                "answer": "A text document that contains all the commands a user could call on the command line to assemble an image."
+            }
+        ],
+        "certificateDetails": {
+            "title": "InturnX Certified Docker Associate",
+            "issuer": "InturnX",
+            "criteria": "Complete all lessons and score >= 70% in the quiz."
+        }
+    },
+    {
+        "title": "Kubernetes for Beginners",
+        "level": "Intermediate",
+        "duration": 4,
+        "description": "This course introduces you to Kubernetes, the leading container orchestration platform. You will learn how to deploy, manage, and scale containerized applications using Kubernetes.",
+        "modules": [
+            {
+                "title": "Introduction to Kubernetes",
+                "lesson": "Understand the architecture of Kubernetes and its core concepts, such as Pods, Services, and Deployments.",
+                "video": "https://example.com/k8s-lesson1"
+            },
+            {
+                "title": "Kubernetes Objects",
+                "lesson": "Learn how to work with common Kubernetes objects, including Pods, ReplicaSets, and Deployments.",
+                "video": "https://example.com/k8s-lesson2"
+            },
+            {
+                "title": "Services, Load Balancing, and Networking",
+                "lesson": "Explore how to expose your applications to the outside world using Services and Ingress.",
+                "video": "https://example.com/k8s-lesson3"
+            },
+            {
+                "title": "Stateful Applications in Kubernetes",
+                "lesson": "Learn how to manage stateful applications in Kubernetes using Persistent Volumes and StatefulSets.",
+                "video": "https://example.com/k8s-lesson4"
+            }
+        ],
+        "quiz": [
+            {
+                "question": "What is the basic scheduling unit in Kubernetes?",
+                "options": ["Container", "Pod", "Node", "Service"],
+                "answer": "Pod"
+            },
+            {
+                "question": "Which Kubernetes object is used to expose an application to the outside world?",
+                "options": ["Pod", "Deployment", "Service", "ReplicaSet"],
+                "answer": "Service"
+            },
+            {
+                "question": "What is the command-line tool for interacting with a Kubernetes cluster?",
+                "options": ["docker", "kubectl", "kubeadm", "kubelet"],
+                "answer": "kubectl"
+            }
+        ],
+        "certificateDetails": {
+            "title": "InturnX Certified Kubernetes Administrator",
+            "issuer": "InturnX",
+            "criteria": "Complete all lessons and score >= 70% in the quiz."
+        }
+    },
+    {
+        "title": "Git & GitHub Mastery",
+        "level": "Beginner",
+        "duration": 3,
+        "description": "This course will teach you the fundamentals of Git and GitHub. You will learn how to use Git for version control and how to collaborate with others on GitHub.",
+        "modules": [
+            {
+                "title": "Introduction to Version Control and Git",
+                "lesson": "Learn the basics of version control and how to install and configure Git.",
+                "video": "https://example.com/git-lesson1"
+            },
+            {
+                "title": "Basic Git Commands",
+                "lesson": "Learn the essential Git commands, such as git add, git commit, and git push.",
+                "video": "https://example.com/git-lesson2"
+            },
+            {
+                "title": "Branching and Merging",
+                "lesson": "Understand how to work with branches in Git and how to merge changes from one branch to another.",
+                "video": "https://example.com/git-lesson3"
+            }
+        ],
+        "quiz": [
+            {
+                "question": "What is the command to initialize a new Git repository?",
+                "options": ["git start", "git init", "git new", "git create"],
+                "answer": "git init"
+            },
+            {
+                "question": "What is the command to stage changes for a commit?",
+                "options": ["git commit", "git stage", "git add", "git push"],
+                "answer": "git add"
+            },
+            {
+                "question": "What is the purpose of a .gitignore file?",
+                "options": ["To ignore all files in a repository.", "To specify intentionally untracked files to ignore.", "To list all the files in a repository.", "To store the commit history of a repository."],
+                "answer": "To specify intentionally untracked files to ignore."
+            }
+        ],
+        "certificateDetails": {
+            "title": "InturnX Certified Git & GitHub User",
+            "issuer": "InturnX",
+            "criteria": "Complete all lessons and score >= 70% in the quiz."
+        }
+    },
+    {
+        "title": "Linux Command Line",
+        "level": "Beginner",
+        "duration": 3,
+        "description": "This course will teach you the fundamentals of the Linux command line. You will learn how to navigate the file system, manage files and permissions, and use essential command-line tools.",
+        "modules": [
+            {
+                "title": "Introduction to the Linux Command Line",
+                "lesson": "Learn the basics of the shell and how to navigate the file system.",
+                "video": "https://example.com/linux-lesson1"
+            },
+            {
+                "title": "Working with Files and Directories",
+                "lesson": "Learn how to create, delete, copy, and move files and directories.",
+                "video": "https://example.com/linux-lesson2"
+            },
+            {
+                "title": "Permissions and Processes",
+                "lesson": "Understand file permissions and how to manage processes on a Linux system.",
+                "video": "https://example.com/linux-lesson3"
+            }
+        ],
+        "quiz": [
+            {
+                "question": "What is the command to list the files in a directory?",
+                "options": ["dir", "list", "ls", "show"],
+                "answer": "ls"
+            },
+            {
+                "question": "What is the command to change the current directory?",
+                "options": ["cd", "chdir", "chd", "cgd"],
+                "answer": "cd"
+            },
+            {
+                "question": "What is the command to display the contents of a file?",
+                "options": ["cat", "show", "display", "type"],
+                "answer": "cat"
+            }
+        ],
+        "certificateDetails": {
+            "title": "InturnX Certified Linux Command Line User",
+            "issuer": "InturnX",
+            "criteria": "Complete all lessons and score >= 70% in the quiz."
+        }
+    },
+    {
+        "title": "Python Programming",
+        "level": "Beginner",
+        "duration": 5,
+        "description": "This course provides a comprehensive introduction to the Python programming language. You will learn the fundamentals of Python, including data types, control flow, functions, and object-oriented programming.",
+        "modules": [
+            {
+                "title": "Introduction to Python",
+                "lesson": "Learn the basics of Python, including variables, data types, and operators.",
+                "video": "https://example.com/python-lesson1"
+            },
+            {
+                "title": "Control Flow",
+                "lesson": "Learn how to use conditional statements and loops to control the flow of your programs.",
+                "video": "https://example.com/python-lesson2"
+            },
+            {
+                "title": "Functions and Modules",
+                "lesson": "Learn how to write your own functions and how to use modules to organize your code.",
+                "video": "https://example.com/python-lesson3"
+            },
+            {
+                "title": "Data Structures",
+                "lesson": "Learn how to work with lists, tuples, dictionaries, and sets.",
+                "video": "https://example.com/python-lesson4"
+            },
+            {
+                "title": "Object-Oriented Programming (OOP)",
+                "lesson": "Learn the fundamentals of object-oriented programming in Python.",
+                "video": "https://example.com/python-lesson5"
+            }
+        ],
+        "quiz": [
+            {
+                "question": "What is the correct way to create a variable in Python?",
+                "options": ["var x = 5", "x = 5", "let x = 5", "const x = 5"],
+                "answer": "x = 5"
+            },
+            {
+                "question": "Which of the following is not a valid data type in Python?",
+                "options": ["int", "float", "string", "double"],
+                "answer": "double"
+            },
+            {
+                "question": "What is the output of the following code: print(2 ** 3)?",
+                "options": ["6", "8", "9", "12"],
+                "answer": "8"
+            }
+        ],
+        "certificateDetails": {
+            "title": "InturnX Certified Python Programmer",
+            "issuer": "InturnX",
+            "criteria": "Complete all lessons and score >= 70% in the quiz."
+        }
+    },
+    {
+        "title": "Java Programming",
+        "level": "Beginner",
+        "duration": 5,
+        "description": "This course provides a comprehensive introduction to the Java programming language. You will learn the fundamentals of Java, including data types, control flow, object-oriented programming, and the Java Collections Framework.",
+        "modules": [
+            {
+                "title": "Introduction to Java",
+                "lesson": "Learn the basics of Java, including the Java Virtual Machine (JVM), data types, and operators.",
+                "video": "https://example.com/java-lesson1"
+            },
+            {
+                "title": "Control Flow",
+                "lesson": "Learn how to use conditional statements and loops to control the flow of your programs.",
+                "video": "https://example.com/java-lesson2"
+            },
+            {
+                "title": "Object-Oriented Programming (OOP)",
+                "lesson": "Learn the fundamentals of object-oriented programming in Java, including classes, objects, inheritance, and polymorphism.",
+                "video": "https://example.com/java-lesson3"
+            },
+            {
+                "title": "The Java Collections Framework",
+                "lesson": "Learn how to work with common data structures, such as lists, sets, and maps, using the Java Collections Framework.",
+                "video": "https://example.com/java-lesson4"
+            },
+            {
+                "title": "Exception Handling",
+                "lesson": "Learn how to handle errors and exceptions in your Java programs.",
+                "video": "https://example.com/java-lesson5"
+            }
+        ],
+        "quiz": [
+            {
+                "question": "What is the entry point of a Java program?",
+                "options": ["The main() method", "The start() method", "The init() method", "The run() method"],
+                "answer": "The main() method"
+            },
+            {
+                "question": "Which of the following is not a primitive data type in Java?",
+                "options": ["int", "float", "string", "char"],
+                "answer": "string"
+            },
+            {
+                "question": "What is the keyword used to create a new object in Java?",
+                "options": ["new", "create", "alloc", "make"],
+                "answer": "new"
+            }
+        ],
+        "certificateDetails": {
+            "title": "InturnX Certified Java Programmer",
+            "issuer": "InturnX",
+            "criteria": "Complete all lessons and score >= 70% in the quiz."
+        }
+    },
+    {
+        "title": "C++ Programming",
+        "level": "Intermediate",
+        "duration": 5,
+        "description": "This course provides a comprehensive introduction to the C++ programming language. You will learn the fundamentals of C++, including data types, control flow, object-oriented programming, and the Standard Template Library (STL).",
+        "modules": [
+            {
+                "title": "Introduction to C++",
+                "lesson": "Learn the basics of C++, including data types, operators, and control flow.",
+                "video": "https://example.com/cpp-lesson1"
+            },
+            {
+                "title": "Functions and Pointers",
+                "lesson": "Learn how to write your own functions and how to work with pointers.",
+                "video": "https://example.com/cpp-lesson2"
+            },
+            {
+                "title": "Object-Oriented Programming (OOP)",
+                "lesson": "Learn the fundamentals of object-oriented programming in C++, including classes, objects, inheritance, and polymorphism.",
+                "video": "https://example.com/cpp-lesson3"
+            },
+            {
+                "title": "The Standard Template Library (STL)",
+                "lesson": "Learn how to work with common data structures, such as vectors, lists, and maps, using the STL.",
+                "video": "https://example.com/cpp-lesson4"
+            },
+            {
+                "title": "Memory Management",
+                "lesson": "Learn how to manage memory in your C++ programs using new and delete.",
+                "video": "https://example.com/cpp-lesson5"
+            }
+        ],
+        "quiz": [
+            {
+                "question": "What is the correct way to declare a pointer in C++?",
+                "options": ["int *p;", "int p*;", "pointer p;", "p = &x;"],
+                "answer": "int *p;"
+            },
+            {
+                "question": "Which of the following is not a valid access specifier in C++?",
+                "options": ["public", "private", "protected", "internal"],
+                "answer": "internal"
+            },
+            {
+                "question": "What is the purpose of the `new` keyword in C++?",
+                "options": ["To create a new variable.", "To allocate memory on the heap.", "To create a new object.", "To create a new function."],
+                "answer": "To allocate memory on the heap."
+            }
+        ],
+        "certificateDetails": {
+            "title": "InturnX Certified C++ Programmer",
+            "issuer": "InturnX",
+            "criteria": "Complete all lessons and score >= 70% in the quiz."
+        }
+    },
+    {
+        "title": "Data Structures & Algorithms",
+        "level": "Advanced",
+        "duration": 6,
+        "description": "This course provides a comprehensive introduction to data structures and algorithms. You will learn how to analyze the time and space complexity of algorithms and how to implement common data structures and algorithms.",
+        "modules": [
+            {
+                "title": "Introduction to Data Structures and Algorithms",
+                "lesson": "Learn the basics of data structures and algorithms and how to analyze their complexity.",
+                "video": "https://example.com/dsa-lesson1"
+            },
+            {
+                "title": "Arrays and Linked Lists",
+                "lesson": "Learn how to implement and use arrays and linked lists.",
+                "video": "https://example.com/dsa-lesson2"
+            },
+            {
+                "title": "Stacks and Queues",
+                "lesson": "Learn how to implement and use stacks and queues.",
+                "video": "https://example.com/dsa-lesson3"
+            },
+            {
+                "title": "Trees and Graphs",
+                "lesson": "Learn how to implement and use trees and graphs.",
+                "video": "https://example.com/dsa-lesson4"
+            },
+            {
+                "title": "Sorting and Searching Algorithms",
+                "lesson": "Learn about common sorting and searching algorithms, such as bubble sort, merge sort, and binary search.",
+                "video": "https://example.com/dsa-lesson5"
+            },
+            {
+                "title": "Dynamic Programming",
+                "lesson": "Learn the fundamentals of dynamic programming and how to solve problems using this technique.",
+                "video": "https://example.com/dsa-lesson6"
+            }
+        ],
+        "quiz": [
+            {
+                "question": "What is the time complexity of binary search?",
+                "options": ["O(n)", "O(log n)", "O(n^2)", "O(1)"],
+                "answer": "O(log n)"
+            },
+            {
+                "question": "Which of the following is a linear data structure?",
+                "options": ["Tree", "Graph", "Array", "Heap"],
+                "answer": "Array"
+            },
+            {
+                "question": "What is the worst-case time complexity of bubble sort?",
+                "options": ["O(n)", "O(log n)", "O(n^2)", "O(1)"],
+                "answer": "O(n^2)"
+            }
+        ],
+        "certificateDetails": {
+            "title": "InturnX Certified Data Structures & Algorithms Expert",
+            "issuer": "InturnX",
+            "criteria": "Complete all lessons and score >= 70% in the quiz."
+        }
+    },
+    {
+        "title": "Database Management Systems",
+        "level": "Intermediate",
+        "duration": 4,
+        "description": "This course provides a comprehensive introduction to database management systems (DBMS). You will learn about the relational model, SQL, and database design.",
+        "modules": [
+            {
+                "title": "Introduction to Databases",
+                "lesson": "Learn the basics of databases and database management systems.",
+                "video": "https://example.com/dbms-lesson1"
+            },
+            {
+                "title": "The Relational Model",
+                "lesson": "Learn about the relational model and how to design a relational database.",
+                "video": "https://example.com/dbms-lesson2"
+            },
+            {
+                "title": "SQL",
+                "lesson": "Learn the basics of the Structured Query Language (SQL).",
+                "video": "https://example.com/dbms-lesson3"
+            },
+            {
+                "title": "Normalization",
+                "lesson": "Learn about database normalization and how to design a normalized database.",
+                "video": "https://example.com/dbms-lesson4"
+            }
+        ],
+        "quiz": [
+            {
+                "question": "What does SQL stand for?",
+                "options": ["Structured Query Language", "Simple Query Language", "Standard Query Language", "Sequential Query Language"],
+                "answer": "Structured Query Language"
+            },
+            {
+                "question": "Which of the following is not a valid SQL command?",
+                "options": ["SELECT", "UPDATE", "DELETE", "CREATE"],
+                "answer": "CREATE"
+            },
+            {
+                "question": "What is the purpose of normalization?",
+                "options": ["To make the database faster.", "To reduce data redundancy and improve data integrity.", "To make the database smaller.", "To make the database more secure."],
+                "answer": "To reduce data redundancy and improve data integrity."
+            }
+        ],
+        "certificateDetails": {
+            "title": "InturnX Certified Database Management Professional",
+            "issuer": "InturnX",
+            "criteria": "Complete all lessons and score >= 70% in the quiz."
+        }
+    },
+    {
+        "title": "Operating Systems",
+        "level": "Intermediate",
+        "duration": 4,
+        "description": "This course provides a comprehensive introduction to operating systems. You will learn about the fundamental concepts of operating systems, including processes, threads, memory management, and file systems.",
+        "modules": [
+            {
+                "title": "Introduction to Operating Systems",
+                "lesson": "Learn the basics of operating systems and their functions.",
+                "video": "https://example.com/os-lesson1"
+            },
+            {
+                "title": "Processes and Threads",
+                "lesson": "Learn about processes and threads and how they are managed by the operating system.",
+                "video": "https://example.com/os-lesson2"
+            },
+            {
+                "title": "Memory Management",
+                "lesson": "Learn about different memory management techniques, such as paging and segmentation.",
+                "video": "https://example.com/os-lesson3"
+            },
+            {
+                "title": "File Systems",
+                "lesson": "Learn about file systems and how they are implemented.",
+                "video": "https://example.com/os-lesson4"
+            }
+        ],
+        "quiz": [
+            {
+                "question": "What is the main function of an operating system?",
+                "options": ["To provide a user interface.", "To manage the computer's hardware and software resources.", "To run applications.", "To connect to the internet."],
+                "answer": "To manage the computer's hardware and software resources."
+            },
+            {
+                "question": "What is a process?",
+                "options": ["A program in execution.", "A file on the disk.", "A thread of execution.", "A data structure."],
+                "answer": "A program in execution."
+            },
+            {
+                "question": "What is the purpose of virtual memory?",
+                "options": ["To make the computer faster.", "To allow a program to use more memory than is physically available.", "To make the computer more secure.", "To make the computer more reliable."],
+                "answer": "To allow a program to use more memory than is physically available."
+            }
+        ],
+        "certificateDetails": {
+            "title": "InturnX Certified Operating Systems Professional",
+            "issuer": "InturnX",
+            "criteria": "Complete all lessons and score >= 70% in the quiz."
+        }
+    },
+    {
+        "title": "Computer Networks",
+        "level": "Intermediate",
+        "duration": 4,
+        "description": "This course provides a comprehensive introduction to computer networks. You will learn about the fundamental concepts of computer networks, including the OSI model, TCP/IP, and network protocols.",
+        "modules": [
+            {
+                "title": "Introduction to Computer Networks",
+                "lesson": "Learn the basics of computer networks and the OSI model.",
+                "video": "https://example.com/cn-lesson1"
+            },
+            {
+                "title": "The Physical Layer",
+                "lesson": "Learn about the physical layer of the OSI model and different transmission media.",
+                "video": "https://example.com/cn-lesson2"
+            },
+            {
+                "title": "The Data Link Layer",
+                "lesson": "Learn about the data link layer of the OSI model and error detection and correction techniques.",
+                "video": "https://example.com/cn-lesson3"
+            },
+            {
+                "title": "The Network Layer",
+                "lesson": "Learn about the network layer of the OSI model and routing algorithms.",
+                "video": "https://example.com/cn-lesson4"
+            }
+        ],
+        "quiz": [
+            {
+                "question": "What are the seven layers of the OSI model?",
+                "options": ["Physical, Data Link, Network, Transport, Session, Presentation, Application", "Physical, Data Link, Network, Transport, Session, Presentation, User", "Physical, Data Link, Network, Transport, Session, Application, User", "Physical, Data Link, Network, Transport, Application, Presentation, User"],
+                "answer": "Physical, Data Link, Network, Transport, Session, Presentation, Application"
+            },
+            {
+                "question": "What is the purpose of the network layer?",
+                "options": ["To transmit bits over a communication channel.", "To provide reliable data transfer between two nodes.", "To route packets from a source to a destination.", "To provide a user interface."],
+                "answer": "To route packets from a source to a destination."
+            },
+            {
+                "question": "What is the difference between TCP and UDP?",
+                "options": ["TCP is connection-oriented, while UDP is connectionless.", "TCP is faster than UDP.", "TCP is less reliable than UDP.", "TCP is used for video streaming, while UDP is used for file transfer."],
+                "answer": "TCP is connection-oriented, while UDP is connectionless."
+            }
+        ],
+        "certificateDetails": {
+            "title": "InturnX Certified Computer Networks Professional",
+            "issuer": "InturnX",
+            "criteria": "Complete all lessons and score >= 70% in the quiz."
+        }
+    },
+    {
+        "title": "Cyber Security Fundamentals",
+        "level": "Beginner",
+        "duration": 4,
+        "description": "This course provides a comprehensive introduction to cyber security. You will learn about the fundamental concepts of cyber security, including threats, vulnerabilities, and countermeasures.",
+        "modules": [
+            {
+                "title": "Introduction to Cyber Security",
+                "lesson": "Learn the basics of cyber security and the CIA triad.",
+                "video": "https://example.com/cs-lesson1"
+            },
+            {
+                "title": "Common Cyber Threats",
+                "lesson": "Learn about common cyber threats, such as malware, phishing, and denial-of-service attacks.",
+                "video": "https://example.com/cs-lesson2"
+            },
+            {
+                "title": "Cryptography",
+                "lesson": "Learn the basics of cryptography and how it is used to secure data.",
+                "video": "https://example.com/cs-lesson3"
+            },
+            {
+                "title": "Network Security",
+                "lesson": "Learn about network security concepts, such as firewalls and intrusion detection systems.",
+                "video": "https://example.com/cs-lesson4"
+            }
+        ],
+        "quiz": [
+            {
+                "question": "What does CIA stand for in the context of cyber security?",
+                "options": ["Confidentiality, Integrity, and Availability", "Central Intelligence Agency", "Cyber Intelligence Agency", "Confidentiality, Integrity, and Authentication"],
+                "answer": "Confidentiality, Integrity, and Availability"
+            },
+            {
+                "question": "What is phishing?",
+                "options": ["A type of malware that encrypts your files and demands a ransom.", "A type of attack that attempts to trick you into revealing sensitive information.", "A type of attack that floods a server with traffic, making it unavailable to legitimate users.", "A type of attack that exploits a vulnerability in a software program."],
+                "answer": "A type of attack that attempts to trick you into revealing sensitive information."
+            },
+            {
+                "question": "What is the purpose of a firewall?",
+                "options": ["To encrypt your data.", "To prevent unauthorized access to your network.", "To detect and remove malware.", "To back up your data."],
+                "answer": "To prevent unauthorized access to your network."
+            }
+        ],
+        "certificateDetails": {
+            "title": "InturnX Certified Cyber Security Professional",
+            "issuer": "InturnX",
+            "criteria": "Complete all lessons and score >= 70% in the quiz."
+        }
+    },
+    {
+        "title": "Machine Learning with Python",
+        "level": "Advanced",
+        "duration": 6,
+        "description": "This course provides a comprehensive introduction to machine learning with Python. You will learn about the fundamental concepts of machine learning, including supervised learning, unsupervised learning, and deep learning.",
+        "modules": [
+            {
+                "title": "Introduction to Machine Learning",
+                "lesson": "Learn the basics of machine learning and its applications.",
+                "video": "https://example.com/ml-lesson1"
+            },
+            {
+                "title": "Supervised Learning",
+                "lesson": "Learn about supervised learning algorithms, such as linear regression, logistic regression, and support vector machines.",
+                "video": "https://example.com/ml-lesson2"
+            },
+            {
+                "title": "Unsupervised Learning",
+                "lesson": "Learn about unsupervised learning algorithms, such as k-means clustering and principal component analysis.",
+                "video": "https://example.com/ml-lesson3"
+            },
+            {
+                "title": "Deep Learning",
+                "lesson": "Learn the fundamentals of deep learning and how to build neural networks with Python.",
+                "video": "https://example.com/ml-lesson4"
+            },
+            {
+                "title": "Natural Language Processing (NLP)",
+                "lesson": "Learn how to process and analyze text data using NLP techniques.",
+                "video": "https://example.com/ml-lesson5"
+            },
+            {
+                "title": "Computer Vision",
+                "lesson": "Learn how to process and analyze image data using computer vision techniques.",
+                "video": "https://example.com/ml-lesson6"
+            }
+        ],
+        "quiz": [
+            {
+                "question": "What is the difference between supervised and unsupervised learning?",
+                "options": ["Supervised learning uses labeled data, while unsupervised learning uses unlabeled data.", "Supervised learning is used for classification, while unsupervised learning is used for regression.", "Supervised learning is more accurate than unsupervised learning.", "Supervised learning is faster than unsupervised learning."],
+                "answer": "Supervised learning uses labeled data, while unsupervised learning uses unlabeled data."
+            },
+            {
+                "question": "Which of the following is a supervised learning algorithm?",
+                "options": ["K-means clustering", "Principal component analysis", "Linear regression", "Apriori algorithm"],
+                "answer": "Linear regression"
+            },
+            {
+                "question": "What is a neural network?",
+                "options": ["A data structure that is used to store data in a hierarchical manner.", "A machine learning model that is inspired by the human brain.", "A type of algorithm that is used for sorting data.", "A type of algorithm that is used for searching data."],
+                "answer": "A machine learning model that is inspired by the human brain."
+            }
+        ],
+        "certificateDetails": {
+            "title": "InturnX Certified Machine Learning with Python Expert",
+            "issuer": "InturnX",
+            "criteria": "Complete all lessons and score >= 70% in the quiz."
+        }
+    },
+    {
+        "title": "Deep Learning Basics",
+        "level": "Advanced",
+        "duration": 6,
+        "description": "This course provides a comprehensive introduction to deep learning. You will learn about the fundamental concepts of deep learning, including neural networks, convolutional neural networks, and recurrent neural networks.",
+        "modules": [
+            {
+                "title": "Introduction to Deep Learning",
+                "lesson": "Learn the basics of deep learning and its applications.",
+                "video": "https://example.com/dl-lesson1"
+            },
+            {
+                "title": "Neural Networks",
+                "lesson": "Learn how to build and train neural networks.",
+                "video": "https://example.com/dl-lesson2"
+            },
+            {
+                "title": "Convolutional Neural Networks (CNNs)",
+                "lesson": "Learn how to build and train CNNs for image classification.",
+                "video": "https://example.com/dl-lesson3"
+            },
+            {
+                "title": "Recurrent Neural Networks (RNNs)",
+                "lesson": "Learn how to build and train RNNs for sequence data.",
+                "video": "https://example.com/dl-lesson4"
+            },
+            {
+                "title": "Generative Adversarial Networks (GANs)",
+                "lesson": "Learn how to build and train GANs to generate new data.",
+                "video": "https://example.com/dl-lesson5"
+            },
+            {
+                "title": "Deep Learning Frameworks",
+                "lesson": "Learn how to use popular deep learning frameworks, such as TensorFlow and PyTorch.",
+                "video": "https://example.com/dl-lesson6"
+            }
+        ],
+        "quiz": [
+            {
+                "question": "What is a convolutional neural network (CNN)?",
+                "options": ["A type of neural network that is used for processing sequence data.", "A type of neural network that is used for processing image data.", "A type of neural network that is used for generating new data.", "A type of neural network that is used for clustering data."],
+                "answer": "A type of neural network that is used for processing image data."
+            },
+            {
+                "question": "What is a recurrent neural network (RNN)?",
+                "options": ["A type of neural network that is used for processing sequence data.", "A type of neural network that is used for processing image data.", "A type of neural network that is used for generating new data.", "A type of neural network that is used for clustering data."],
+                "answer": "A type of neural network that is used for processing sequence data."
+            },
+            {
+                "question": "What is a generative adversarial network (GAN)?",
+                "options": ["A type of neural network that is used for processing sequence data.", "A type of neural network that is used for processing image data.", "A type of neural network that is used for generating new data.", "A type of neural network that is used for clustering data."],
+                "answer": "A type of neural network that is used for generating new data."
+            }
+        ],
+        "certificateDetails": {
+            "title": "InturnX Certified Deep Learning Expert",
+            "issuer": "InturnX",
+            "criteria": "Complete all lessons and score >= 70% in the quiz."
+        }
+    },
+    {
+        "title": "Data Science Essentials",
+        "level": "Intermediate",
+        "duration": 5,
+        "description": "This course provides a comprehensive introduction to data science. You will learn about the fundamental concepts of data science, including data collection, data cleaning, data analysis, and data visualization.",
+        "modules": [
+            {
+                "title": "Introduction to Data Science",
+                "lesson": "Learn the basics of data science and the data science lifecycle.",
+                "video": "https://example.com/ds-lesson1"
+            },
+            {
+                "title": "Data Collection and Cleaning",
+                "lesson": "Learn how to collect and clean data from various sources.",
+                "video": "https://example.com/ds-lesson2"
+            },
+            {
+                "title": "Data Analysis",
+                "lesson": "Learn how to analyze data using statistical methods and machine learning algorithms.",
+                "video": "https://example.com/ds-lesson3"
+            },
+            {
+                "title": "Data Visualization",
+                "lesson": "Learn how to visualize data using various charts and graphs.",
+                "video": "https://example.com/ds-lesson4"
+            },
+            {
+                "title": "Data Science Tools",
+                "lesson": "Learn how to use popular data science tools, such as Python, R, and SQL.",
+                "video": "https://example.com/ds-lesson5"
+            }
+        ],
+        "quiz": [
+            {
+                "question": "What is the first step in the data science lifecycle?",
+                "options": ["Data collection", "Data cleaning", "Data analysis", "Data visualization"],
+                "answer": "Data collection"
+            },
+            {
+                "question": "What is the purpose of data cleaning?",
+                "options": ["To make the data more accurate and reliable.", "To make the data smaller.", "To make the data more secure.", "To make the data faster to process."],
+                "answer": "To make the data more accurate and reliable."
+            },
+            {
+                "question": "Which of the following is not a data visualization technique?",
+                "options": ["Bar chart", "Pie chart", "Line chart", "SQL query"],
+                "answer": "SQL query"
+            }
+        ],
+        "certificateDetails": {
+            "title": "InturnX Certified Data Science Professional",
+            "issuer": "InturnX",
+            "criteria": "Complete all lessons and score >= 70% in the quiz."
+        }
+    },
+    {
+        "title": "Artificial Intelligence Overview",
+        "level": "Intermediate",
+        "duration": 5,
+        "description": "This course provides a comprehensive overview of artificial intelligence (AI). You will learn about the fundamental concepts of AI, including machine learning, deep learning, natural language processing, and computer vision.",
+        "modules": [
+            {
+                "title": "Introduction to Artificial Intelligence",
+                "lesson": "Learn the basics of AI and its history.",
+                "video": "https://example.com/ai-lesson1"
+            },
+            {
+                "title": "Machine Learning",
+                "lesson": "Learn about the different types of machine learning and their applications.",
+                "video": "https://example.com/ai-lesson2"
+            },
+            {
+                "title": "Deep Learning",
+                "lesson": "Learn about the fundamentals of deep learning and its applications.",
+                "video": "https://example.com/ai-lesson3"
+            },
+            {
+                "title": "Natural Language Processing (NLP)",
+                "lesson": "Learn about the fundamentals of NLP and its applications.",
+                "video": "https://example.com/ai-lesson4"
+            },
+            {
+                "title": "Computer Vision",
+                "lesson": "Learn about the fundamentals of computer vision and its applications.",
+                "video": "https://example.com/ai-lesson5"
+            }
+        ],
+        "quiz": [
+            {
+                "question": "What is the difference between AI, machine learning, and deep learning?",
+                "options": ["AI is a subset of machine learning, which is a subset of deep learning.", "Machine learning is a subset of AI, which is a subset of deep learning.", "Deep learning is a subset of machine learning, which is a subset of AI.", "They are all the same thing."],
+                "answer": "Deep learning is a subset of machine learning, which is a subset of AI."
+            },
+            {
+                "question": "Which of the following is not an application of AI?",
+                "options": ["Self-driving cars", "Facial recognition", "Spam filtering", "Sending an email"],
+                "answer": "Sending an email"
+            },
+            {
+                "question": "What is natural language processing (NLP)?",
+                "options": ["The ability of a computer to understand and process human language.", "The ability of a computer to see and understand images.", "The ability of a computer to learn from data.", "The ability of a computer to play games."],
+                "answer": "The ability of a computer to understand and process human language."
+            }
+        ],
+        "certificateDetails": {
+            "title": "InturnX Certified AI Professional",
+            "issuer": "InturnX",
+            "criteria": "Complete all lessons and score >= 70% in the quiz."
+        }
+    },
+    {
+        "title": "Web Development with HTML, CSS, JS",
+        "level": "Beginner",
+        "duration": 5,
+        "description": "This course provides a comprehensive introduction to web development with HTML, CSS, and JavaScript. You will learn how to create and style web pages and how to add interactivity with JavaScript.",
+        "modules": [
+            {
+                "title": "Introduction to HTML",
+                "lesson": "Learn the basics of HTML and how to create a simple web page.",
+                "video": "https://example.com/web-lesson1"
+            },
+            {
+                "title": "Introduction to CSS",
+                "lesson": "Learn the basics of CSS and how to style a web page.",
+                "video": "https://example.com/web-lesson2"
+            },
+            {
+                "title": "Introduction to JavaScript",
+                "lesson": "Learn the basics of JavaScript and how to add interactivity to a web page.",
+                "video": "https://example.com/web-lesson3"
+            },
+            {
+                "title": "The Document Object Model (DOM)",
+                "lesson": "Learn how to manipulate the DOM with JavaScript.",
+                "video": "https://example.com/web-lesson4"
+            },
+            {
+                "title": "jQuery",
+                "lesson": "Learn how to use the jQuery library to simplify JavaScript programming.",
+                "video": "https://example.com/web-lesson5"
+            }
+        ],
+        "quiz": [
+            {
+                "question": "What does HTML stand for?",
+                "options": ["Hyper Text Markup Language", "Hyperlinks and Text Markup Language", "Home Tool Markup Language", "Hyper Tool Markup Language"],
+                "answer": "Hyper Text Markup Language"
+            },
+            {
+                "question": "What does CSS stand for?",
+                "options": ["Cascading Style Sheets", "Creative Style Sheets", "Computer Style Sheets", "Colorful Style Sheets"],
+                "answer": "Cascading Style Sheets"
+            },
+            {
+                "question": "What is the correct way to include a JavaScript file in an HTML document?",
+                "options": ["<script src='myscript.js'></script>", "<javascript src='myscript.js'></javascript>", "<js src='myscript.js'></js>", "<script href='myscript.js'></script>"],
+                "answer": "<script src='myscript.js'></script>"
+            }
+        ],
+        "certificateDetails": {
+            "title": "InturnX Certified Web Developer",
+            "issuer": "InturnX",
+            "criteria": "Complete all lessons and score >= 70% in the quiz."
+        }
+    },
+    {
+        "title": "React.js Fundamentals",
+        "level": "Intermediate",
+        "duration": 4,
+        "description": "This course provides a comprehensive introduction to React.js. You will learn about the fundamental concepts of React.js, including components, props, state, and hooks.",
+        "modules": [
+            {
+                "title": "Introduction to React.js",
+                "lesson": "Learn the basics of React.js and how to set up a React development environment.",
+                "video": "https://example.com/react-lesson1"
+            },
+            {
+                "title": "Components, Props, and State",
+                "lesson": "Learn how to create and use components, props, and state in React.js.",
+                "video": "https://example.com/react-lesson2"
+            },
+            {
+                "title": "Lifecycle Methods",
+                "lesson": "Learn about the different lifecycle methods in React.js and how to use them.",
+                "video": "https://example.com/react-lesson3"
+            },
+            {
+                "title": "Hooks",
+                "lesson": "Learn how to use hooks in React.js to manage state and side effects.",
+                "video": "https://example.com/react-lesson4"
+            }
+        ],
+        "quiz": [
+            {
+                "question": "What is React.js?",
+                "options": ["A JavaScript library for building user interfaces.", "A JavaScript framework for building user interfaces.", "A programming language.", "A database."],
+                "answer": "A JavaScript library for building user interfaces."
+            },
+            {
+                "question": "What is a component in React.js?",
+                "options": ["A reusable piece of UI.", "A function that returns a React element.", "A class that extends React.Component.", "All of the above."],
+                "answer": "All of the above."
+            },
+            {
+                "question": "What is the purpose of state in React.js?",
+                "options": ["To store data that can be shared between components.", "To store data that is private to a component.", "To store data that is passed from a parent component to a child component.", "To store data that is fetched from an API."],
+                "answer": "To store data that is private to a component."
+            }
+        ],
+        "certificateDetails": {
+            "title": "InturnX Certified React.js Developer",
+            "issuer": "InturnX",
+            "criteria": "Complete all lessons and score >= 70% in the quiz."
+        }
+    },
+    {
+        "title": "Node.js & Express",
+        "level": "Intermediate",
+        "duration": 4,
+        "description": "This course provides a comprehensive introduction to Node.js and Express. You will learn how to build web applications and APIs with Node.js and Express.",
+        "modules": [
+            {
+                "title": "Introduction to Node.js",
+                "lesson": "Learn the basics of Node.js and how to set up a Node.js development environment.",
+                "video": "https://example.com/node-lesson1"
+            },
+            {
+                "title": "Modules and npm",
+                "lesson": "Learn how to use modules and the npm package manager in Node.js.",
+                "video": "https://example.com/node-lesson2"
+            },
+            {
+                "title": "Introduction to Express",
+                "lesson": "Learn the basics of Express and how to create a simple web server.",
+                "video": "https://example.com/node-lesson3"
+            },
+            {
+                "title": "Routing and Middleware",
+                "lesson": "Learn how to handle requests and responses with routing and middleware in Express.",
+                "video": "https://example.com/node-lesson4"
+            }
+        ],
+        "quiz": [
+            {
+                "question": "What is Node.js?",
+                "options": ["A JavaScript runtime built on Chrome's V8 JavaScript engine.", "A JavaScript library for building user interfaces.", "A JavaScript framework for building user interfaces.", "A database."],
+                "answer": "A JavaScript runtime built on Chrome's V8 JavaScript engine."
+            },
+            {
+                "question": "What is npm?",
+                "options": ["The Node.js package manager.", "The Node.js programming language.", "The Node.js database.", "The Node.js web server."],
+                "answer": "The Node.js package manager."
+            },
+            {
+                "question": "What is Express?",
+                "options": ["A web framework for Node.js.", "A database for Node.js.", "A programming language for Node.js.", "A package manager for Node.js."],
+                "answer": "A web framework for Node.js."
+            }
+        ],
+        "certificateDetails": {
+            "title": "InturnX Certified Node.js & Express Developer",
+            "issuer": "InturnX",
+            "criteria": "Complete all lessons and score >= 70% in the quiz."
+        }
+    },
+    {
+        "title": "MongoDB for Developers",
+        "level": "Intermediate",
+        "duration": 3,
+        "description": "This course provides a comprehensive introduction to MongoDB. You will learn about the fundamental concepts of MongoDB, including documents, collections, and queries.",
+        "modules": [
+            {
+                "title": "Introduction to MongoDB",
+                "lesson": "Learn the basics of MongoDB and how to set up a MongoDB development environment.",
+                "video": "https://example.com/mongo-lesson1"
+            },
+            {
+                "title": "Documents and Collections",
+                "lesson": "Learn how to create and work with documents and collections in MongoDB.",
+                "video": "https://example.com/mongo-lesson2"
+            },
+            {
+                "title": "Queries",
+                "lesson": "Learn how to query data in MongoDB using the find() method.",
+                "video": "https://example.com/mongo-lesson3"
+            }
+        ],
+        "quiz": [
+            {
+                "question": "What is MongoDB?",
+                "options": ["A relational database.", "A NoSQL database.", "A graph database.", "A key-value store."],
+                "answer": "A NoSQL database."
+            },
+            {
+                "question": "What is a document in MongoDB?",
+                "options": ["A record in a collection.", "A table in a database.", "A row in a table.", "A column in a table."],
+                "answer": "A record in a collection."
+            },
+            {
+                "question": "What is the command to find all documents in a collection?",
+                "options": ["db.collection.find()", "db.collection.findAll()", "db.collection.get()", "db.collection.getAll()"],
+                "answer": "db.collection.find()"
+            }
+        ],
+        "certificateDetails": {
+            "title": "InturnX Certified MongoDB Developer",
+            "issuer": "InturnX",
+            "criteria": "Complete all lessons and score >= 70% in the quiz."
+        }
+    },
+    {
+        "title": "REST API Development",
+        "level": "Intermediate",
+        "duration": 3,
+        "description": "This course provides a comprehensive introduction to REST API development. You will learn about the fundamental concepts of REST, including resources, representations, and hypermedia.",
+        "modules": [
+            {
+                "title": "Introduction to REST",
+                "lesson": "Learn the basics of REST and the six architectural constraints.",
+                "video": "https://example.com/rest-lesson1"
+            },
+            {
+                "title": "Resources and Representations",
+                "lesson": "Learn how to design and represent resources in a REST API.",
+                "video": "https://example.com/rest-lesson2"
+            },
+            {
+                "title": "Hypermedia",
+                "lesson": "Learn how to use hypermedia to create self-discoverable REST APIs.",
+                "video": "https://example.com/rest-lesson3"
+            }
+        ],
+        "quiz": [
+            {
+                "question": "What does REST stand for?",
+                "options": ["Representational State Transfer", "Remote State Transfer", "Representational State Transmission", "Remote State Transmission"],
+                "answer": "Representational State Transfer"
+            },
+            {
+                "question": "What is a resource in a REST API?",
+                "options": ["A piece of data that can be accessed via a URI.", "A function that can be called via a URI.", "A service that can be accessed via a URI.", "A component that can be accessed via a URI."],
+                "answer": "A piece of data that can be accessed via a URI."
+            },
+            {
+                "question": "What is the purpose of hypermedia in a REST API?",
+                "options": ["To make the API self-discoverable.", "To make the API faster.", "To make the API more secure.", "To make the API more reliable."],
+                "answer": "To make the API self-discoverable."
+            }
+        ],
+        "certificateDetails": {
+            "title": "InturnX Certified REST API Developer",
+            "issuer": "InturnX",
+            "criteria": "Complete all lessons and score >= 70% in the quiz."
+        }
+    },
+    {
+        "title": "System Design Basics",
+        "level": "Advanced",
+        "duration": 6,
+        "description": "This course provides a comprehensive introduction to system design. You will learn about the fundamental concepts of system design, including scalability, availability, and performance.",
+        "modules": [
+            {
+                "title": "Introduction to System Design",
+                "lesson": "Learn the basics of system design and the system design process.",
+                "video": "https://example.com/sd-lesson1"
+            },
+            {
+                "title": "Scalability",
+                "lesson": "Learn how to design scalable systems that can handle a large number of users.",
+                "video": "https://example.com/sd-lesson2"
+            },
+            {
+                "title": "Availability",
+                "lesson": "Learn how to design highly available systems that are resilient to failures.",
+                "video": "https://example.com/sd-lesson3"
+            },
+            {
+                "title": "Performance",
+                "lesson": "Learn how to design high-performance systems that can handle a large number of requests.",
+                "video": "https://example.com/sd-lesson4"
+            },
+            {
+                "title": "Caching",
+                "lesson": "Learn how to use caching to improve the performance of your systems.",
+                "video": "https://example.com/sd-lesson5"
+            },
+            {
+                "title": "Databases",
+                "lesson": "Learn how to choose the right database for your system.",
+                "video": "https://example.com/sd-lesson6"
+            }
+        ],
+        "quiz": [
+            {
+                "question": "What is scalability?",
+                "options": ["The ability of a system to handle a large number of users.", "The ability of a system to be resilient to failures.", "The ability of a system to handle a large number of requests.", "The ability of a system to be easy to use."],
+                "answer": "The ability of a system to handle a large number of users."
+            },
+            {
+                "question": "What is availability?",
+                "options": ["The ability of a system to handle a large number of users.", "The ability of a system to be resilient to failures.", "The ability of a system to handle a large number of requests.", "The ability of a system to be easy to use."],
+                "answer": "The ability of a system to be resilient to failures."
+            },
+            {
+                "question": "What is performance?",
+                "options": ["The ability of a system to handle a large number of users.", "The ability of a system to be resilient to failures.", "The ability of a system to handle a large number of requests.", "The ability of a system to be easy to use."],
+                "answer": "The ability of a system to handle a large number of requests."
+            }
+        ],
+        "certificateDetails": {
+            "title": "InturnX Certified System Design Expert",
+            "issuer": "InturnX",
+            "criteria": "Complete all lessons and score >= 70% in the quiz."
+        }
+    },
+    {
+        "title": "Cloud Deployment with CI/CD",
+        "level": "Intermediate",
+        "duration": 4,
+        "description": "This course provides a comprehensive introduction to cloud deployment with CI/CD. You will learn how to use CI/CD pipelines to automate the deployment of your applications to the cloud.",
+        "modules": [
+            {
+                "title": "Introduction to CI/CD",
+                "lesson": "Learn the basics of CI/CD and its benefits.",
+                "video": "https://example.com/cicd-lesson1"
+            },
+            {
+                "title": "Jenkins",
+                "lesson": "Learn how to use Jenkins to create CI/CD pipelines.",
+                "video": "https://example.com/cicd-lesson2"
+            },
+            {
+                "title": "Docker",
+                "lesson": "Learn how to use Docker to containerize your applications.",
+                "video": "https://example.com/cicd-lesson3"
+            },
+            {
+                "title": "Kubernetes",
+                "lesson": "Learn how to use Kubernetes to orchestrate your containers.",
+                "video": "https://example.com/cicd-lesson4"
+            }
+        ],
+        "quiz": [
+            {
+                "question": "What does CI/CD stand for?",
+                "options": ["Continuous Integration/Continuous Delivery", "Continuous Integration/Continuous Deployment", "Continuous Integration/Continuous Development", "Continuous Integration/Continuous Design"],
+                "answer": "Continuous Integration/Continuous Delivery"
+            },
+            {
+                "question": "What is Jenkins?",
+                "options": ["A CI/CD tool.", "A containerization tool.", "A container orchestration tool.", "A cloud provider."],
+                "answer": "A CI/CD tool."
+            },
+            {
+                "question": "What is Docker?",
+                "options": ["A CI/CD tool.", "A containerization tool.", "A container orchestration tool.", "A cloud provider."],
+                "answer": "A containerization tool."
+            }
+        ],
+        "certificateDetails": {
+            "title": "InturnX Certified Cloud Deployment Professional",
+            "issuer": "InturnX",
+            "criteria": "Complete all lessons and score >= 70% in the quiz."
+        }
+    },
+    {
+        "title": "Interview Preparation (Technical)",
+        "level": "All Levels",
+        "duration": 6,
+        "description": "This course will help you prepare for technical interviews. You will learn how to solve common coding problems, how to design systems, and how to answer behavioral questions.",
+        "modules": [
+            {
+                "title": "Data Structures and Algorithms",
+                "lesson": "Review common data structures and algorithms and practice solving coding problems.",
+                "video": "https://example.com/ip-lesson1"
+            },
+            {
+                "title": "System Design",
+                "lesson": "Learn how to design scalable and reliable systems.",
+                "video": "https://example.com/ip-lesson2"
+            },
+            {
+                "title": "Behavioral Questions",
+                "lesson": "Learn how to answer common behavioral questions using the STAR method.",
+                "video": "https://example.com/ip-lesson3"
+            },
+            {
+                "title": "Company-Specific Preparation",
+                "lesson": "Learn how to research companies and prepare for company-specific questions.",
+                "video": "https://example.com/ip-lesson4"
+            },
+            {
+                "title": "Mock Interviews",
+                "lesson": "Practice your interviewing skills with mock interviews.",
+                "video": "https://example.com/ip-lesson5"
+            },
+            {
+                "title": "Salary Negotiation",
+                "lesson": "Learn how to negotiate your salary and benefits.",
+                "video": "https://example.com/ip-lesson6"
+            }
+        ],
+        "quiz": [
+            {
+                "question": "What is the STAR method?",
+                "options": ["A method for answering behavioral questions.", "A method for solving coding problems.", "A method for designing systems.", "A method for negotiating salary."],
+                "answer": "A method for answering behavioral questions."
+            },
+            {
+                "question": "What is the most important thing to do when preparing for a technical interview?",
+                "options": ["Practice solving coding problems.", "Learn about the company.", "Prepare for behavioral questions.", "All of the above."],
+                "answer": "All of the above."
+            },
+            {
+                "question": "What is the best way to answer a behavioral question?",
+                "options": ["Be honest and concise.", "Tell a story.", "Use the STAR method.", "All of the above."],
+                "answer": "All of the above."
+            }
+        ],
+        "certificateDetails": {
+            "title": "InturnX Certified Technical Interviewee",
+            "issuer": "InturnX",
+            "criteria": "Complete all lessons and score >= 70% in the quiz."
+        }
+    },
+    {
+        "title": "Aptitude & Logical Reasoning",
+        "level": "Beginner",
+        "duration": 3,
+        "description": "This course will help you improve your aptitude and logical reasoning skills. You will learn how to solve common aptitude problems, such as number series, coding-decoding, and blood relations.",
+        "modules": [
+            {
+                "title": "Number Series",
+                "lesson": "Learn how to solve number series problems.",
+                "video": "https://example.com/alr-lesson1"
+            },
+            {
+                "title": "Coding-Decoding",
+                "lesson": "Learn how to solve coding-decoding problems.",
+                "video": "https://example.com/alr-lesson2"
+            },
+            {
+                "title": "Blood Relations",
+                "lesson": "Learn how to solve blood relations problems.",
+                "video": "https://example.com/alr-lesson3"
+            }
+        ],
+        "quiz": [
+            {
+                "question": "What is the next number in the series: 2, 4, 6, 8, ...?",
+                "options": ["10", "12", "14", "16"],
+                "answer": "10"
+            },
+            {
+                "question": "If `HELLO` is coded as `IFMMP`, how is `WORLD` coded?",
+                "options": ["XPQME", "XPSME", "XPSMF", "XPSNE"],
+                "answer": "XPSME"
+            },
+            {
+                "question": "If A is the brother of B, and C is the sister of A, what is the relation of C to B?",
+                "options": ["Sister", "Brother", "Mother", "Father"],
+                "answer": "Sister"
+            }
+        ],
+        "certificateDetails": {
+            "title": "InturnX Certified Aptitude & Logical Reasoning Professional",
+            "issuer": "InturnX",
+            "criteria": "Complete all lessons and score >= 70% in the quiz."
+        }
+    },
+    {
+        "title": "Professional Communication Skills",
+        "level": "Beginner",
+        "duration": 3,
+        "description": "This course will help you improve your professional communication skills. You will learn how to communicate effectively in the workplace, both verbally and non-verbally.",
+        "modules": [
+            {
+                "title": "Verbal Communication",
+                "lesson": "Learn how to communicate effectively in meetings, presentations, and one-on-one conversations.",
+                "video": "https://example.com/pcs-lesson1"
+            },
+            {
+                "title": "Non-Verbal Communication",
+                "lesson": "Learn how to use body language, facial expressions, and tone of voice to communicate effectively.",
+                "video": "https://example.com/pcs-lesson2"
+            },
+            {
+                "title": "Written Communication",
+                "lesson": "Learn how to write clear, concise, and professional emails, reports, and other documents.",
+                "video": "https://example.com/pcs-lesson3"
+            }
+        ],
+        "quiz": [
+            {
+                "question": "What is the most important aspect of professional communication?",
+                "options": ["Clarity", "Conciseness", "Confidence", "All of the above."],
+                "answer": "All of the above."
+            },
+            {
+                "question": "What is the best way to start a professional email?",
+                "options": ["Hey,", "Hi,", "Dear Mr./Ms. [Last Name],", "To whom it may concern,"],
+                "answer": "Dear Mr./Ms. [Last Name],"
+            },
+            {
+                "question": "What is the best way to end a professional email?",
+                "options": ["Thanks,", "Best,", "Sincerely,", "All of the above."],
+                "answer": "All of the above."
+            }
+        ],
+        "certificateDetails": {
+            "title": "InturnX Certified Professional Communicator",
+            "issuer": "InturnX",
+            "criteria": "Complete all lessons and score >= 70% in the quiz."
+        }
+    }
+]

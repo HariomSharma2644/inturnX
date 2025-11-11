@@ -1,0 +1,32 @@
+<svg width="300" height="80" viewBox="0 0 300 80" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="300" height="80" fill="#ffffff" rx="8"/>
+
+  <!-- Inturn text -->
+  <text x="20" y="50" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="32" font-weight="600" fill="#000000" letter-spacing="0.5px">
+    Inturn
+  </text>
+
+  <!-- Stylized X -->
+  <!-- Left diagonal line -->
+  <path d="M 155 25 L 175 45" stroke="url(#xGradient1)" stroke-width="4" stroke-linecap="round"/>
+  <!-- Right diagonal line -->
+  <path d="M 175 25 L 155 45" stroke="url(#xGradient2)" stroke-width="4" stroke-linecap="round"/>
+
+  <!-- Gradient definitions -->
+  <defs>
+    <!-- Gradient for left diagonal -->
+    <linearGradient id="xGradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3B82F6;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#8B5CF6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#EC4899;stop-opacity:1" />
+    </linearGradient>
+
+    <!-- Gradient for right diagonal -->
+    <linearGradient id="xGradient2" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#EC4899;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#8B5CF6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3B82F6;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+</svg>
