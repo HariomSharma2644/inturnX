@@ -10,15 +10,12 @@ const Header = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-4">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2 group">
-            <div className="relative">
-              <div className="w-10 h-10 bg-gradient-to-br from-[#14A44D] to-[#5F2EEA] rounded-lg flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 transform group-hover:scale-105">
-                <span className="text-white font-bold text-lg">I</span>
-              </div>
-            </div>
-            <div className="text-2xl font-bold bg-gradient-to-r from-[#14A44D] to-[#5F2EEA] bg-clip-text text-transparent">
-              InturnX
-            </div>
+          <Link to="/" className="flex items-center group">
+            <img
+              src="/inturnx-logo.svg"
+              alt="InturnX"
+              className="h-10 transition-all duration-300 transform group-hover:scale-105"
+            />
           </Link>
 
           {/* Navigation - Only show for non-authenticated users on home page */}

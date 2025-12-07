@@ -34,8 +34,8 @@ export default function Navbar() {
     >
       <div className="max-w-7xl mx-auto px-6 py-4">
         <div className="flex justify-between items-center">
-          <Link to="/" className="text-2xl font-bold text-white">
-            Inturn<span className="text-[#14A44D]">X</span>
+          <Link to="/" className="flex items-center">
+            <img src="/inturnx-logo.svg" alt="InturnX" className="h-10" />
           </Link>
 
           {/* Desktop Navigation */}
