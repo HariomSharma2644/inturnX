@@ -56,7 +56,12 @@ router.get('/github/callback',
     const token = jwt.sign({ userId: req.user._id }, process.env.JWT_SECRET || 'your-secret-key', {
       expiresIn: '7d'
     });
-    res.redirect(`${process.env.CLIENT_URL || 'http://localhost:5173'}/auth/callback?token=${token}&provider=github`);
+    // For Railway-only deployment: use relative path
+    // For separate deployments: use CLIENT_URL
+    const redirectUrl = process.env.CLIENT_URL
+      ? `${process.env.CLIENT_URL}/auth/callback?token=${token}&provider=github`
+      : `/auth/callback?token=${token}&provider=github`;
+    res.redirect(redirectUrl);
   }
 );
 
@@ -67,7 +72,10 @@ router.get('/google/callback',
     const token = jwt.sign({ userId: req.user._id }, process.env.JWT_SECRET || 'your-secret-key', {
       expiresIn: '7d'
     });
-    res.redirect(`${process.env.CLIENT_URL || 'http://localhost:5173'}/auth/callback?token=${token}&provider=google`);
+    const redirectUrl = process.env.CLIENT_URL
+      ? `${process.env.CLIENT_URL}/auth/callback?token=${token}&provider=google`
+      : `/auth/callback?token=${token}&provider=google`;
+    res.redirect(redirectUrl);
   }
 );
 
@@ -78,7 +86,10 @@ router.get('/linkedin/callback',
     const token = jwt.sign({ userId: req.user._id }, process.env.JWT_SECRET || 'your-secret-key', {
       expiresIn: '7d'
     });
-    res.redirect(`${process.env.CLIENT_URL || 'http://localhost:5173'}/auth/callback?token=${token}&provider=linkedin`);
+    const redirectUrl = process.env.CLIENT_URL
+      ? `${process.env.CLIENT_URL}/auth/callback?token=${token}&provider=linkedin`
+      : `/auth/callback?token=${token}&provider=linkedin`;
+    res.redirect(redirectUrl);
   }
 );
 
