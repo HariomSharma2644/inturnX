@@ -1,13 +1,15 @@
 import axios from 'axios';
 
 // Create axios instance with default config
-// Use VITE_API_URL from .env or fallback to proxy
+// For Railway-only deployment: use empty baseURL (relative paths)
+// For separate deployments: use VITE_API_URL from .env
 const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_URL || '',
   headers: {
     'Content-Type': 'application/json',
   },
   timeout: 10000,
+  withCredentials: true, // Important for cookies/sessions
 });
 
 // Request interceptor for debugging

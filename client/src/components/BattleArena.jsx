@@ -33,7 +33,13 @@ const BattleArena = () => {
 
   // Initialize socket connection
   useEffect(() => {
-    const newSocket = io(import.meta.env.VITE_API_URL);
+    // For Railway-only deployment: connect to same origin
+    // For separate deployments: use VITE_API_URL from .env
+    const socketUrl = import.meta.env.VITE_API_URL || window.location.origin;
+    const newSocket = io(socketUrl, {
+      withCredentials: true,
+      transports: ['websocket', 'polling']
+    });
     setSocket(newSocket);
 
     newSocket.on('connect', () => {
@@ -358,11 +364,10 @@ const BattleArena = () => {
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               disabled={tab.disabled}
-              className={`flex-1 py-3 px-4 rounded-xl font-semibold transition-all duration-300 ${
-                activeTab === tab.id
-                  ? 'bg-gradient-to-r from-[#14A44D] to-[#5F2EEA] text-white shadow-lg'
-                  : 'text-gray-400 hover:text-white hover:bg-white/10'
-              } ${tab.disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+              className={`flex-1 py-3 px-4 rounded-xl font-semibold transition-all duration-300 ${activeTab === tab.id
+                ? 'bg-gradient-to-r from-[#14A44D] to-[#5F2EEA] text-white shadow-lg'
+                : 'text-gray-400 hover:text-white hover:bg-white/10'
+                } ${tab.disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               {tab.name}
             </button>
@@ -400,10 +405,9 @@ const BattleArena = () => {
                 <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-6">
                   <h3 className="text-xl font-bold mb-4">{battleState.problem.title}</h3>
                   <div className="text-sm text-gray-400 mb-2">
-                    Difficulty: <span className={`px-2 py-1 rounded ${
-                      battleState.problem.difficulty === 'Easy' ? 'bg-green-600' :
+                    Difficulty: <span className={`px-2 py-1 rounded ${battleState.problem.difficulty === 'Easy' ? 'bg-green-600' :
                       battleState.problem.difficulty === 'Medium' ? 'bg-yellow-600' : 'bg-red-600'
-                    }`}>{battleState.problem.difficulty}</span>
+                      }`}>{battleState.problem.difficulty}</span>
                   </div>
                   <div className="prose prose-invert max-w-none">
                     <p className="text-gray-300 mb-4">{battleState.problem.description}</p>
@@ -569,10 +573,9 @@ const BattleArena = () => {
                   <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-6">
                     <h3 className="text-xl font-bold mb-4">{practiceProblem.title}</h3>
                     <div className="text-sm text-gray-400 mb-2">
-                      Difficulty: <span className={`px-2 py-1 rounded ${
-                        practiceProblem.difficulty === 'Easy' ? 'bg-green-600' :
+                      Difficulty: <span className={`px-2 py-1 rounded ${practiceProblem.difficulty === 'Easy' ? 'bg-green-600' :
                         practiceProblem.difficulty === 'Medium' ? 'bg-yellow-600' : 'bg-red-600'
-                      }`}>{practiceProblem.difficulty}</span>
+                        }`}>{practiceProblem.difficulty}</span>
                     </div>
                     <div className="prose prose-invert max-w-none">
                       <p className="text-gray-300 mb-4">{practiceProblem.description}</p>
@@ -747,14 +750,14 @@ const BattleArena = () => {
             <div className="text-center mb-6">
               <div className="text-4xl mb-4">
                 {battleResult.result === 'player1_win' && battleResult.player1.userName === user?.name ? '🏆' :
-                 battleResult.result === 'player2_win' && battleResult.player2.userName === user?.name ? '🏆' : '🤝'}
+                  battleResult.result === 'player2_win' && battleResult.player2.userName === user?.name ? '🏆' : '🤝'}
               </div>
               <h3 className="text-2xl font-bold mb-2">Battle Complete!</h3>
               <div className="text-gray-300">
                 {battleResult.result === 'draw' ? 'It\'s a Draw!' :
-                 battleResult.player1.userName === user?.name ?
-                 (battleResult.result === 'player1_win' ? 'You Won!' : 'You Lost!') :
-                 (battleResult.result === 'player2_win' ? 'You Won!' : 'You Lost!')}
+                  battleResult.player1.userName === user?.name ?
+                    (battleResult.result === 'player1_win' ? 'You Won!' : 'You Lost!') :
+                    (battleResult.result === 'player2_win' ? 'You Won!' : 'You Lost!')}
               </div>
             </div>
 

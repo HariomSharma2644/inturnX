@@ -32,16 +32,34 @@ require('./config/passport');
 
 const app = express();
 const server = http.createServer(app);
+
+// Configure allowed origins
+// For Railway-only deployment, CLIENT_URL can be same as SERVER_URL or not set
+const allowedOrigins = process.env.NODE_ENV === 'production'
+  ? [
+    process.env.CLIENT_URL,
+    process.env.SERVER_URL,
+    process.env.RAILWAY_PUBLIC_DOMAIN ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}` : null
+  ].filter(Boolean)
+  : [
+    process.env.CLIENT_URL || "http://localhost:5173",
+    "http://192.168.17.156:5173",
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "http://10.239.52.112:5173"
+  ];
+
 const io = socketIo(server, {
   cors: {
-    origin: [process.env.CLIENT_URL || "http://localhost:5173", "http://192.168.17.156:5173", "http://localhost:5173", "http://127.0.0.1:5173", "http://10.239.52.112:5173"],
-    methods: ["GET", "POST"]
+    origin: allowedOrigins.length > 0 ? allowedOrigins : true,
+    methods: ["GET", "POST"],
+    credentials: true
   }
 });
 
 // Middleware
 app.use(cors({
-  origin: [process.env.CLIENT_URL || "http://localhost:5173", "http://192.168.17.156:5173", "http://localhost:5173", "http://127.0.0.1:5173", "http://10.239.52.112:5173"],
+  origin: allowedOrigins,
   credentials: true
 }));
 app.use(express.json());
@@ -66,9 +84,6 @@ app.use(passport.session());
 // Serve uploaded files
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Serve static files from the React app build directory
-app.use(express.static(path.join(__dirname, '../client/dist')));
-
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/courses', coursesRoutes);
@@ -87,10 +102,15 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', message: 'InturnX Server is running' });
 });
 
-// Catch all handler: send back React's index.html file for any non-API routes
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../client/dist/index.html'));
-});
+// Serve static files from the React app build directory (for Railway full-stack deployment)
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '../client/dist')));
+
+  // Catch all handler: send back React's index.html file for any non-API routes
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/dist/index.html'));
+  });
+}
 
 // Initialize Battle Manager
 const battleManager = new BattleManager(io);

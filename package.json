@@ -1,24 +1,20 @@
 {
-  "dependencies": {
-    "@mediapipe/camera_utils": "^0.3.1675466862",
-    "@mediapipe/drawing_utils": "^0.3.1675466124",
-    "@mediapipe/face_mesh": "^0.4.1633559619",
-    "@mediapipe/hands": "^0.4.1675469240",
-    "@mediapipe/pose": "^0.5.1675469404",
-    "axios": "^1.12.2",
-    "dotenv": "^17.2.3",
-    "express-session": "^1.18.2",
-    "html2canvas": "^1.4.1",
-    "jspdf": "^3.0.3",
-    "mongodb": "^7.0.0",
-    "mongoose": "^8.19.3",
-    "openai": "^6.8.1",
-    "openai-whisper": "^1.0.2",
-    "passport": "^0.7.0",
-    "passport-github2": "^0.1.12",
-    "passport-google-oauth20": "^2.0.0",
-    "passport-linkedin-oauth2": "^2.0.0",
-    "react-speech-kit": "^3.0.1",
-    "recordrtc": "^5.6.2"
+  "name": "inturnx-fullstack",
+  "version": "1.0.0",
+  "description": "InturnX - Full Stack Application",
+  "scripts": {
+    "install:all": "npm install && cd client && npm install && cd ../server && npm install",
+    "build": "cd client && npm install && npm run build",
+    "start:prod": "cd server && npm install && node server.js",
+    "dev:client": "cd client && npm run dev",
+    "dev:server": "cd server && npm run dev",
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\""
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
   }
 }
