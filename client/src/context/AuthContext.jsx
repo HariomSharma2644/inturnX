@@ -110,18 +110,22 @@ export const AuthProvider = ({ children }) => {
   };
 
   // Handle OAuth callback
-  const handleOAuthCallback = (token, provider) => {
+  const handleOAuthCallback = async (token, provider) => {
     if (token) {
       localStorage.setItem('token', token);
       setToken(token);
 
       // Fetch user data after setting token
-      axios.get('/api/auth/profile').then(response => {
+      try {
+        const response = await axios.get('/api/auth/profile');
         setUser(response.data.user);
-      }).catch(error => {
+        return { success: true };
+      } catch (error) {
         console.error('Failed to fetch user after OAuth:', error);
-      });
+        return { success: false };
+      }
     }
+    return { success: false };
   };
 
   const value = {

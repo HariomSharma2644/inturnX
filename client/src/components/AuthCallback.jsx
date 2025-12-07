@@ -8,15 +8,23 @@ export default function AuthCallback() {
   const { handleOAuthCallback } = useAuth();
 
   useEffect(() => {
-    const token = searchParams.get('token');
-    const provider = searchParams.get('provider');
+    const handleCallback = async () => {
+      const token = searchParams.get('token');
+      const provider = searchParams.get('provider');
 
-    if (token && provider) {
-      handleOAuthCallback(token, provider);
-      navigate('/dashboard');
-    } else {
-      navigate('/login');
-    }
+      if (token && provider) {
+        const result = await handleOAuthCallback(token, provider);
+        if (result.success) {
+          navigate('/dashboard');
+        } else {
+          navigate('/login');
+        }
+      } else {
+        navigate('/login');
+      }
+    };
+
+    handleCallback();
   }, [searchParams, navigate, handleOAuthCallback]);
 
   return (
