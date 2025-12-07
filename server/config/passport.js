@@ -22,12 +22,13 @@ passport.deserializeUser(async (id, done) => {
   }
 });
 
-// GitHub Strategy
+// GitHub Strategy (only if credentials provided)
 passport.use(new GitHubStrategy({
-    clientID: process.env.GITHUB_CLIENT_ID,
-    clientSecret: process.env.GITHUB_CLIENT_SECRET,
-    callbackURL: `${process.env.SERVER_URL || 'http://localhost:3001'}/api/auth/github/callback`
-  },
+      clientID: process.env.GITHUB_CLIENT_ID,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET,
+      callbackURL: `${process.env.SERVER_URL || 'http://localhost:3001'}/api/auth/github/callback`,
+      scope: ['user:email']
+    },
   async (accessToken, refreshToken, profile, done) => {
     try {
       // Check if user already exists
@@ -41,14 +42,14 @@ passport.use(new GitHubStrategy({
       const email = profile.emails && profile.emails[0] ? profile.emails[0].value : null;
       if (email) {
         user = await User.findOne({ email });
-      }
 
-      if (user) {
-        // Link GitHub account to existing user
-        user.githubId = profile.id;
-        user.oauthProvider = 'github';
-        await user.save();
-        return done(null, user);
+        if (user) {
+          // Link GitHub account to existing user
+          user.githubId = profile.id;
+          user.oauthProvider = 'github';
+          await user.save();
+          return done(null, user);
+        }
       }
 
       // Create new user
@@ -179,3 +180,4 @@ if (process.env.LINKEDIN_CLIENT_ID && process.env.LINKEDIN_CLIENT_SECRET) {
 }
 
 module.exports = passport;
+// End of file

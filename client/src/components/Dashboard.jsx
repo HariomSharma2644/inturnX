@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import BackButton from './BackButton';
 import axios from '../utils/axios';
 
 // Home button component
@@ -126,10 +125,11 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        // Fetch user stats and recommendations
-        const [statsResponse, recommendationsResponse] = await Promise.all([
+        // Fetch user stats, recommendations, and recent activities
+        const [statsResponse, recommendationsResponse, recentActivityResponse] = await Promise.all([
           axios.get('/api/auth/profile'),
-          axios.get('/api/ai/recommend')
+          axios.get('/api/ai/recommend'),
+          axios.get('/api/users/recent-activity') // This endpoint needs to be created
         ]);
 
         setStats({
@@ -145,15 +145,9 @@ const Dashboard = () => {
           timeSpent: statsResponse.data.user.timeSpent || Math.floor(Math.random() * 500) + 100
         });
 
-        // Generate mock recent activities
-        setRecentActivities([
-          { id: 1, type: 'course', title: 'Completed React Fundamentals', time: '2 hours ago', icon: '📚' },
-          { id: 2, type: 'battle', title: 'Won coding battle vs CodeMaster', time: '5 hours ago', icon: '⚔️' },
-          { id: 3, type: 'quiz', title: 'Scored 95% in JavaScript Quiz Level 3', time: '1 day ago', icon: '🧠' },
-          { id: 4, type: 'project', title: 'Submitted E-commerce Project', time: '2 days ago', icon: '🚀' }
-        ]);
+        setRecentActivities(recentActivityResponse.data.activities);
 
-        // Generate mock upcoming deadlines
+        // Generate mock upcoming deadlines (can be replaced with real data later)
         setUpcomingDeadlines([
           { id: 1, title: 'Machine Learning Project Deadline', date: 'Dec 15, 2024', type: 'project' },
           { id: 2, title: 'Python Advanced Quiz', date: 'Dec 18, 2024', type: 'quiz' },
@@ -161,6 +155,11 @@ const Dashboard = () => {
         ]);
       } catch (error) {
         console.error('Failed to fetch dashboard data:', error);
+        // Set mock data on error to prevent crash
+        setRecentActivities([
+          { id: 1, type: 'course', title: 'Completed React Fundamentals', time: '2 hours ago', icon: '📚' },
+          { id: 2, type: 'battle', title: 'Won coding battle vs CodeMaster', time: '5 hours ago', icon: '⚔️' },
+        ]);
       } finally {
         setLoading(false);
       }
@@ -179,7 +178,6 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0A0A0A] to-[#1A1A1A] text-white">
-      <BackButton />
       {/* Header */}
       <div className="bg-black/20 backdrop-blur-xl border-b border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -190,6 +188,15 @@ const Dashboard = () => {
             <div className="flex items-center space-x-4">
                <span className="text-gray-300">Welcome, {user?.name}!</span>
                <HomeButton />
+               <Link to="/profile" className="flex items-center space-x-2 text-gray-300 hover:text-white transition-colors duration-300 focus:outline-none p-2 rounded-full hover:bg-white/10">
+                 <div className="w-8 h-8 bg-gradient-to-r from-[#14A44D] to-[#5F2EEA] rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                   {user?.avatar ? (
+                     <img src={user.avatar} alt={user.name} className="w-full h-full rounded-full object-cover" />
+                   ) : (
+                     user?.name?.charAt(0)?.toUpperCase() || 'U'
+                   )}
+                 </div>
+               </Link>
                <button
                  onClick={logout}
                  className="bg-gradient-to-r from-[#FF4B2B] to-[#FF8E53] text-white px-6 py-2 rounded-full hover:shadow-[#FF4B2B]/40 transition-all duration-300 transform hover:scale-105"

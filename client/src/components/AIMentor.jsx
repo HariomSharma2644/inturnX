@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import axios from '../utils/axios';
 import { useAuth } from '../context/AuthContext';
+import BackButton from './BackButton';
 
 const AIMentor = () => {
   const { user } = useAuth();
@@ -87,6 +88,7 @@ const AIMentor = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0A0A0A] to-[#1A1A1A] text-white">
+      <BackButton />
       {/* Header */}
       <div className="bg-black/20 backdrop-blur-xl border-b border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">

@@ -105,6 +105,10 @@ export const AuthProvider = ({ children }) => {
     delete axios.defaults.headers.common['Authorization'];
   };
 
+  const updateUser = (newUserData) => {
+    setUser(newUserData);
+  };
+
   // Handle OAuth callback
   const handleOAuthCallback = (token, provider) => {
     if (token) {
@@ -128,6 +132,7 @@ export const AuthProvider = ({ children }) => {
     signup,
     demoLogin,
     logout,
+    updateUser,
     handleOAuthCallback,
     isAuthenticated: !!user
   };

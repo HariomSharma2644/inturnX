@@ -1,3 +1,4 @@
+
 from fastapi import FastAPI, HTTPException, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -9,7 +10,14 @@ from code_eval import evaluate_code
 from chat_mentor import chat_with_mentor
 from transcribe_audio import transcriber
 from generate_report import generate_interview_report
+from question_generator import question_generator
+from video_analyzer import video_analyzer
 import io
+import json
+from typing import List, Dict
+import base64
+import cv2
+import numpy as np
 
 app = FastAPI(title="InturnX AI Service", version="1.0.0")
 
@@ -46,6 +54,13 @@ class InterviewAnalysisRequest(BaseModel):
 
 class ReportGenerationRequest(BaseModel):
     report_data: dict
+
+class QuestionGenerationRequest(BaseModel):
+    role: str
+    num_questions: int = 8
+
+class VideoAnalysisRequest(BaseModel):
+    frames: List[bytes]  # Base64 encoded frames
 
 @app.get("/health")
 async def health_check():
@@ -133,8 +148,37 @@ async def analyze_interview_endpoint(request: InterviewAnalysisRequest):
 @app.post("/generate-report")
 async def generate_report_endpoint(request: ReportGenerationRequest):
     try:
-        pdf_bytes = generate_interview_report(request.report_data)
-        return {"pdf": pdf_bytes.decode('latin-1')}
+        json_report = generate_interview_report(request.report_data)
+        return {"report": json_report}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/generate-questions")
+async def generate_questions_endpoint(request: QuestionGenerationRequest):
+    try:
+        questions = question_generator.get_questions_for_role(request.role, request.num_questions)
+        return {"questions": questions}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/analyze-video")
+async def analyze_video_endpoint(request: VideoAnalysisRequest):
+    try:
+        # Decode base64 frames to numpy arrays
+        frames = []
+        for frame_data in request.frames:
+            # Decode base64 to bytes
+            frame_bytes = base64.b64decode(frame_data)
+            # Convert to numpy array
+            nparr = np.frombuffer(frame_bytes, np.uint8)
+            # Decode to image
+            frame = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+            if frame is not None:
+                frames.append(frame)
+
+        # Analyze video frames
+        analysis = video_analyzer.analyze_video_stream(frames)
+        return {"analysis": analysis}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

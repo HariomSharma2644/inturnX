@@ -33,6 +33,91 @@ const upload = multer({
   }
 });
 
+const { spawn } = require('child_process');
+const simpleGit = require('simple-git');
+const fs = require('fs').promises;
+const unzipper = require('unzipper');
+
+const analyzeProject = async (project) => {
+  const tempDir = path.join(__dirname, '..', 'temp', project._id.toString());
+  let codeToAnalyze = '';
+  let language = 'javascript'; // Default language, should be determined from course
+
+  try {
+    await fs.mkdir(tempDir, { recursive: true });
+
+    if (project.githubLink) {
+      await simpleGit().clone(project.githubLink, tempDir);
+    } else if (project.zipFile) {
+      await fs.createReadStream(path.join(__dirname, '..', project.zipFile))
+        .pipe(unzipper.Extract({ path: tempDir }))
+        .promise();
+    }
+
+    const files = await fs.readdir(tempDir, { recursive: true });
+    for (const file of files) {
+      const filePath = path.join(tempDir, file);
+      const stat = await fs.stat(filePath);
+      if (!stat.isDirectory()) {
+        // A simple way to filter for source code files.
+        // This can be improved to be more specific based on the course language.
+        if (/\.(js|py|java|cpp|c|h|html|css)$/.test(filePath)) {
+            const content = await fs.readFile(filePath, 'utf-8');
+            codeToAnalyze += `\n--- ${file} ---\n${content}`;
+        }
+      }
+    }
+
+    if (codeToAnalyze) {
+        const pythonProcess = spawn('python', [
+            path.join(__dirname, '..', '..', 'ai_service', 'code_eval.py'),
+            language,
+        ]);
+
+        let output = '';
+        pythonProcess.stdout.on('data', (data) => {
+            output += data.toString();
+        });
+
+        let errorOutput = '';
+        pythonProcess.stderr.on('data', (data) => {
+            errorOutput += data.toString();
+        });
+
+        pythonProcess.on('close', async (code) => {
+            if (code === 0) {
+                try {
+                    const analysis = JSON.parse(output);
+                    await Project.findByIdAndUpdate(project._id, {
+                        aiScore: analysis.overall_score,
+                        aiFeedback: analysis.feedback,
+                        status: 'reviewed',
+                    });
+                    console.log(`AI analysis completed for project ${project._id}`);
+                } catch (error) {
+                    console.error('Error updating project with AI analysis:', error);
+                }
+            } else {
+                console.error(`Python script exited with code ${code}. Error: ${errorOutput}`);
+            }
+            // Clean up the temp directory
+            await fs.rm(tempDir, { recursive: true, force: true });
+        });
+
+        pythonProcess.stdin.write(codeToAnalyze);
+        pythonProcess.stdin.end();
+    } else {
+        // No code found to analyze, clean up
+        await fs.rm(tempDir, { recursive: true, force: true });
+    }
+
+  } catch (error) {
+    console.error('Error analyzing project:', error);
+    // Clean up the temp directory in case of error
+    await fs.rm(tempDir, { recursive: true, force: true }).catch(err => console.error(`Failed to remove temp dir: ${err}`));
+  }
+};
+
 // Submit project
 router.post('/submit', auth, upload.single('zipFile'), async (req, res) => {
   try {
@@ -52,21 +137,7 @@ router.post('/submit', auth, upload.single('zipFile'), async (req, res) => {
 
     await project.save();
 
-    // Trigger AI analysis (mock for now)
-    // In real implementation, this would call the AI service
-    setTimeout(async () => {
-      const aiScore = Math.floor(Math.random() * 40) + 60; // Random score 60-100
-      const aiFeedback = 'Great project! Your code structure is well-organized and follows best practices. Consider adding more comprehensive error handling for production use.';
-
-      // Update project with AI results
-      await Project.findByIdAndUpdate(project._id, {
-        aiScore,
-        aiFeedback,
-        status: 'reviewed'
-      });
-
-      console.log(`AI analysis completed for project ${project._id}: Score ${aiScore}`);
-    }, 5000); // Simulate AI processing time
+    analyzeProject(project);
 
     res.status(201).json({
       message: 'Project submitted successfully',

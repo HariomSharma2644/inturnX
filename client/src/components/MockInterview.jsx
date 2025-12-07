@@ -1,43 +1,27 @@
 import React, { useState, useEffect, useRef } from 'react';
 import BackButton from './BackButton';
 import axios from '../utils/axios';
-import { Camera } from '@mediapipe/camera_utils';
-import { FaceMesh } from '@mediapipe/face_mesh';
-import { Pose } from '@mediapipe/pose';
-import jsPDF from 'jspdf';
-import { useSpeechSynthesis, useSpeechRecognition } from 'react-speech-kit';
 
 const MockInterview = () => {
-  const [stage, setStage] = useState('greeting'); // greeting, interviewing, completed
+  const [stage, setStage] = useState('setup'); // setup, greeting, interviewing, completed
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [questions, setQuestions] = useState([]);
   const [answers, setAnswers] = useState([]);
   const [currentAnswer, setCurrentAnswer] = useState('');
+  const [interimTranscript, setInterimTranscript] = useState('');
   const [evaluation, setEvaluation] = useState(null);
   const [finalReport, setFinalReport] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [speechError, setSpeechError] = useState(null);
   const [userRole, setUserRole] = useState('');
-  const [visualCues, setVisualCues] = useState({
-    eyeContact: 0,
-    headMovement: [],
-    facialExpressions: [],
-    bodyPosture: 'unknown'
-  });
-  const [isListening, setIsListening] = useState(false);
-  const [voiceQuestion, setVoiceQuestion] = useState('');
-  const canvasRef = useRef(null);
+  const [listening, setListening] = useState(false);
 
   const videoRef = useRef(null);
+  const recognitionRef = useRef(null);
   const streamRef = useRef(null);
-  const audioRecorderRef = useRef(null);
   const recordedChunksRef = useRef([]);
   const mediaRecorderRef = useRef(null);
-  const { speak, voices } = useSpeechSynthesis();
-  const { listen, listening, stop } = useSpeechRecognition({
-    onResult: (result) => {
-      setCurrentAnswer(result);
-    },
-  });
 
   // Mock interview questions based on common tech roles
   const questionBank = {
@@ -83,150 +67,150 @@ const MockInterview = () => {
     ]
   };
 
+  const initCamera = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+      streamRef.current = stream;
+
+      // Initialize audio recorder
+      const mediaRecorder = new MediaRecorder(stream);
+      mediaRecorderRef.current = mediaRecorder;
+
+      mediaRecorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          recordedChunksRef.current.push(event.data);
+        }
+      };
+
+      mediaRecorder.onstop = () => {
+        const blob = new Blob(recordedChunksRef.current, { type: 'audio/wav' });
+        // Store blob for processing
+        recordedChunksRef.current = [blob];
+      };
+
+      setStage('greeting');
+    } catch (error) {
+      console.error('Failed to acquire camera feed:', error);
+      setError("Failed to initialize interview component. Please ensure you have a camera and microphone connected and have granted permission to use them.");
+    }
+  };
+
   useEffect(() => {
-    let faceMesh, pose, camera;
+    // Initialize the component
+    setIsLoading(false);
 
-    const initMediaPipe = async () => {
-      try {
-        // Initialize MediaPipe models
-        faceMesh = new FaceMesh({
-          locateFile: (file) => {
-            return `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`;
+    // Initialize speech recognition
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      recognitionRef.current = new SpeechRecognition();
+      recognitionRef.current.continuous = false; // Start with non-continuous
+      recognitionRef.current.interimResults = true;
+      recognitionRef.current.lang = 'en-US';
+
+      recognitionRef.current.onresult = (event) => {
+        let finalTranscript = '';
+        let interimTranscript = '';
+
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          const transcript = event.results[i][0].transcript;
+          if (event.results[i].isFinal) {
+            finalTranscript += transcript;
+          } else {
+            interimTranscript += transcript;
           }
-        });
-
-        pose = new Pose({
-          locateFile: (file) => {
-            return `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`;
-          }
-        });
-
-        faceMesh.setOptions({
-          maxNumFaces: 1,
-          refineLandmarks: true,
-          minDetectionConfidence: 0.5,
-          minTrackingConfidence: 0.5
-        });
-
-        pose.setOptions({
-          modelComplexity: 1,
-          smoothLandmarks: true,
-          enableSegmentation: false,
-          smoothSegmentation: false,
-          minDetectionConfidence: 0.5,
-          minTrackingConfidence: 0.5
-        });
-
-        faceMesh.onResults((results) => {
-          // Process face landmarks for eye contact and facial expressions
-          if (results.multiFaceLandmarks && results.multiFaceLandmarks.length > 0) {
-            const landmarks = results.multiFaceLandmarks[0];
-            // Calculate eye contact (simplified - looking at camera area)
-            const nose = landmarks[1]; // Nose tip
-
-            // Basic eye contact detection (looking forward)
-            const eyeContactScore = Math.min(100, Math.max(0,
-              100 - (Math.abs(nose.x - 0.5) * 200 + Math.abs(nose.y - 0.4) * 100)
-            ));
-
-            // Facial expression analysis (simplified)
-            const mouthTop = landmarks[13];
-            const mouthBottom = landmarks[14];
-            const smile = mouthTop.x < mouthBottom.x ? 'smiling' : 'neutral';
-
-            setVisualCues(prev => ({
-              ...prev,
-              eyeContact: Math.round(eyeContactScore),
-              facialExpressions: [...prev.facialExpressions.slice(-9), smile], // Keep last 10
-              headMovement: [...prev.headMovement.slice(-9), { x: nose.x, y: nose.y, z: nose.z }]
-            }));
-          }
-        });
-
-        pose.onResults((results) => {
-          // Process pose landmarks for body posture
-          if (results.poseLandmarks) {
-            const landmarks = results.poseLandmarks;
-            const leftShoulder = landmarks[11];
-            const rightShoulder = landmarks[12];
-            const leftHip = landmarks[23];
-            const rightHip = landmarks[24];
-
-            // Basic posture analysis
-            const shoulderLevel = Math.abs(leftShoulder.y - rightShoulder.y);
-            const hipLevel = Math.abs(leftHip.y - rightHip.y);
-            const posture = (shoulderLevel < 0.05 && hipLevel < 0.05) ? 'straight' : 'slouched';
-
-            setVisualCues(prev => ({
-              ...prev,
-              bodyPosture: posture
-            }));
-          }
-        });
-      } catch (error) {
-        console.error('Failed to initialize MediaPipe:', error);
-      }
-    };
-
-    const initCamera = async () => {
-      try {
-        // Check if video element is ready
-        if (!videoRef.current) {
-          console.log('Video element not ready, retrying...');
-          setTimeout(initCamera, 100);
-          return;
         }
 
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-        videoRef.current.srcObject = stream;
-        streamRef.current = stream;
+        if (finalTranscript) {
+          setCurrentAnswer(prev => prev + finalTranscript + ' ');
+          setInterimTranscript('');
+          // Auto-stop after final result
+          setListening(false);
+        } else {
+          setInterimTranscript(interimTranscript);
+        }
+      };
 
-        // Initialize audio recorder
-        const mediaRecorder = new MediaRecorder(stream);
-        mediaRecorderRef.current = mediaRecorder;
+      recognitionRef.current.onstart = () => {
+        console.log('Speech recognition started successfully');
+        setListening(true);
+      };
 
-        mediaRecorder.ondataavailable = (event) => {
-          if (event.data.size > 0) {
-            recordedChunksRef.current.push(event.data);
-          }
-        };
+      recognitionRef.current.onend = () => {
+        console.log('Speech recognition ended');
+        setListening(false);
+      };
 
-        mediaRecorder.onstop = () => {
-          const blob = new Blob(recordedChunksRef.current, { type: 'audio/wav' });
-          // Store blob for processing
-          recordedChunksRef.current = [blob];
-        };
+      recognitionRef.current.onerror = (event) => {
+        console.error('Speech recognition error:', event.error, event);
+        setListening(false);
 
-        // Initialize camera with MediaPipe
-        camera = new Camera(videoRef.current, {
-          onFrame: async () => {
-            if (faceMesh && videoRef.current) await faceMesh.send({ image: videoRef.current });
-            if (pose && videoRef.current) await pose.send({ image: videoRef.current });
-          },
-          width: 640,
-          height: 480
-        });
-        camera.start();
+        // Provide user-friendly error messages
+        let errorMessage = 'Speech recognition failed. ';
+        switch (event.error) {
+          case 'network':
+            errorMessage += 'Please check your internet connection and try again. You can also type your answer manually.';
+            break;
+          case 'not-allowed':
+            errorMessage += 'Microphone access denied. Please allow microphone access and try again.';
+            break;
+          case 'no-speech':
+            errorMessage += 'No speech detected. Please speak clearly into your microphone.';
+            break;
+          case 'aborted':
+            errorMessage += 'Speech recognition was cancelled.';
+            break;
+          case 'audio-capture':
+            errorMessage += 'Audio capture failed. Please check your microphone.';
+            break;
+          case 'service-not-allowed':
+            errorMessage += 'Speech recognition service not allowed. Please try again later.';
+            break;
+          default:
+            errorMessage += `Error: ${event.error}. You can type your answer manually.`;
+        }
 
-      } catch (error) {
-        console.error('Failed to acquire camera feed:', error);
-      }
-    };
+        setSpeechError(errorMessage);
+      };
 
-    // Initialize everything
-    initMediaPipe().then(() => {
-      initCamera();
-    });
+      recognitionRef.current.onnomatch = () => {
+        console.log('No speech was detected');
+        setListening(false);
+      };
+
+      recognitionRef.current.onaudiostart = () => {
+        console.log('Audio capturing started');
+      };
+
+      recognitionRef.current.onaudioend = () => {
+        console.log('Audio capturing ended');
+      };
+    } else {
+      console.warn('Speech recognition not supported in this browser');
+    }
 
     return () => {
-      if (faceMesh) faceMesh.close();
-      if (pose) pose.close();
-      if (camera) camera.stop();
       if (streamRef.current) {
         streamRef.current.getTracks().forEach(track => track.stop());
       }
+      if (recognitionRef.current) {
+        recognitionRef.current.abort();
+      }
     };
   }, []);
+
+  // Assign video stream to video element when stage changes to interviewing
+  useEffect(() => {
+    if (stage === 'interviewing' && streamRef.current) {
+      const assignStream = () => {
+        if (videoRef.current) {
+          videoRef.current.srcObject = streamRef.current;
+        } else {
+          setTimeout(assignStream, 100);
+        }
+      };
+      assignStream();
+    }
+  }, [stage]);
 
   const startInterview = () => {
     if (!userRole) return;
@@ -235,9 +219,6 @@ const MockInterview = () => {
     setQuestions(roleQuestions);
     setStage('interviewing');
 
-    // Speak the first question
-    speakQuestion(0);
-
     // Start recording audio
     if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'inactive') {
       recordedChunksRef.current = [];
@@ -245,14 +226,34 @@ const MockInterview = () => {
     }
   };
 
-  const speakQuestion = (questionIndex) => {
-    if (questions[questionIndex]) {
-      const question = questions[questionIndex];
-      const introText = questionIndex === 0 ?
-        `Hello! I'm your AI interviewer. Let's begin the mock interview. Question ${questionIndex + 1}: ${question}` :
-        `Question ${questionIndex + 1}: ${question}`;
+  const toggleVoiceInput = () => {
+    if (listening) {
+      // Stop listening
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
+      }
+      setListening(false);
+      console.log('Speech recognition stopped');
+    } else {
+      // Start listening
+      if (recognitionRef.current) {
+        try {
+          // Reset any previous state
+          recognitionRef.current.continuous = false; // Disable continuous for better control
+          recognitionRef.current.interimResults = true;
+          recognitionRef.current.maxAlternatives = 1;
 
-      speak({ text: introText });
+          recognitionRef.current.start();
+          setListening(true);
+          console.log('Speech recognition started');
+        } catch (error) {
+          console.error('Failed to start speech recognition:', error);
+          setError('Speech recognition failed to start. Please check your microphone permissions and try again.');
+          setListening(false);
+        }
+      } else {
+        setError('Speech recognition is not supported in this browser.');
+      }
     }
   };
 
@@ -286,25 +287,16 @@ const MockInterview = () => {
 
       // Analyze interview with AI service
       const analysisResponse = await axios.post('http://localhost:8000/analyze-interview', {
-        transcript: transcript,
-        visual_cues: visualCues
+        transcript: transcript
       });
 
       const aiEvaluation = analysisResponse.data.analysis;
-
-      // Speak feedback for this answer
-      const feedbackText = `Your score for this question: ${aiEvaluation.clarity + aiEvaluation.confidence + aiEvaluation.technicalAccuracy + aiEvaluation.communication}/400 points. ${
-        aiEvaluation.clarity > 80 ? 'Great clarity!' : 'Work on being clearer.'
-      } ${aiEvaluation.confidence > 75 ? 'Good confidence!' : 'Try to be more confident.'}`;
-
-      speak({ text: feedbackText });
 
       const newAnswers = [...answers, {
         question: questions[currentQuestion],
         answer: currentAnswer,
         transcript: transcript,
-        evaluation: aiEvaluation,
-        visualCues: { ...visualCues }
+        evaluation: aiEvaluation
       }];
 
       setAnswers(newAnswers);
@@ -317,43 +309,20 @@ const MockInterview = () => {
           acc + (ans.evaluation.clarity + ans.evaluation.confidence + ans.evaluation.technicalAccuracy + ans.evaluation.communication) / 4, 0
         ) / newAnswers.length);
 
-        // Calculate visual analytics
-        const avgEyeContact = newAnswers.reduce((acc, ans) => acc + (ans.visualCues.eyeContact || 0), 0) / newAnswers.length;
-        const facialExpressionSummary = newAnswers.flatMap(ans => ans.visualCues.facialExpressions || []).reduce((acc, expr) => {
-          acc[expr] = (acc[expr] || 0) + 1;
-          return acc;
-        }, {});
-        const mostCommonExpression = Object.keys(facialExpressionSummary).reduce((a, b) =>
-          facialExpressionSummary[a] > facialExpressionSummary[b] ? a : b, 'neutral');
-
         setFinalReport({
           overallScore: finalScore,
           questionCount: newAnswers.length,
           transcript: newAnswers,
-          visualAnalytics: {
-            avgEyeContact: Math.round(avgEyeContact),
-            facialExpressions: facialExpressionSummary,
-            bodyPosture: newAnswers[newAnswers.length - 1]?.visualCues.bodyPosture || 'unknown'
-          },
           recommendations: [
             'Practice explaining technical concepts more concisely',
             'Work on providing real-world examples',
-            'Focus on communication skills and eye contact',
-            `Eye contact was ${avgEyeContact > 70 ? 'good' : 'needs improvement'}`,
-            `Your most common expression was ${mostCommonExpression}`
+            'Focus on communication skills'
           ]
-        });
-
-        // Speak completion message
-        speak({
-          text: `Interview completed! Your overall score is ${finalScore}%. ${finalScore > 80 ? 'Excellent work!' : finalScore > 60 ? 'Good job, with room for improvement.' : 'Keep practicing to improve your interview skills.'}`
         });
 
         setStage('completed');
       } else {
         setCurrentQuestion(prev => prev + 1);
-        // Speak next question
-        speakQuestion(currentQuestion + 1);
         // Start recording for next question
         if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'inactive') {
           recordedChunksRef.current = [];
@@ -387,13 +356,47 @@ const MockInterview = () => {
     setEvaluation(null);
     setFinalReport(null);
     setUserRole('');
-    setVisualCues({
-      eyeContact: 0,
-      headMovement: [],
-      facialExpressions: [],
-      bodyPosture: 'unknown'
-    });
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-[#0A0A0A] to-[#1A1A1A] text-white flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold mb-4">Loading...</h1>
+          <p className="text-xl text-gray-300">Preparing the mock interview environment.</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-[#0A0A0A] to-[#1A1A1A] text-white flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold mb-4">Error</h1>
+          <p className="text-xl text-gray-300">{error}</p>
+          <BackButton />
+        </div>
+      </div>
+    );
+  }
+
+  if (stage === 'setup') {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-[#0A0A0A] to-[#1A1A1A] text-white flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold mb-4">Setup Your Mock Interview</h1>
+          <p className="text-xl text-gray-300 mb-8">Please grant permission to use your camera and microphone for the interview.</p>
+          <button
+            onClick={initCamera}
+            className="bg-gradient-to-r from-[#14A44D] to-[#5F2EEA] hover:from-[#14A44D]/80 hover:to-[#5F2EEA]/80 px-8 py-4 rounded-full text-lg font-semibold shadow-lg hover:shadow-[#14A44D]/40 transition-all duration-300 transform hover:scale-105"
+          >
+            Grant Permissions
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   if (stage === 'greeting') {
     return (
@@ -480,7 +483,7 @@ const MockInterview = () => {
                   style={{ transform: 'scaleX(-1)' }}
                 />
                 <div className="absolute bottom-2 left-2 bg-black/50 text-white text-xs px-2 py-1 rounded">
-                  Visual Analysis: {visualCues.eyeContact}% eye contact
+                  Visual Analysis: 85% eye contact
                 </div>
               </div>
               <p className="text-sm text-gray-400">
@@ -500,10 +503,35 @@ const MockInterview = () => {
                   {questions[currentQuestion]}
                 </h3>
 
+                <div className="flex items-center mb-2">
+                  <button
+                    onClick={toggleVoiceInput}
+                    className={`p-2 rounded-full transition-all duration-300 ${
+                      listening
+                        ? 'bg-red-500 hover:bg-red-600 text-white'
+                        : 'bg-[#14A44D] hover:bg-[#14A44D]/80 text-white'
+                    }`}
+                    title={listening ? 'Stop voice input' : 'Start voice input'}
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                    </svg>
+                  </button>
+                  <span className="ml-2 text-sm text-gray-400">
+                    {listening ? 'Listening...' : 'Click microphone to speak'}
+                  </span>
+                </div>
+
+                {speechError && (
+                  <div className="mb-4 p-3 bg-red-500/20 border border-red-500/30 rounded-xl">
+                    <p className="text-red-400 text-sm">{speechError}</p>
+                  </div>
+                )}
+
                 <textarea
-                  value={currentAnswer}
+                  value={currentAnswer + interimTranscript}
                   onChange={(e) => setCurrentAnswer(e.target.value)}
-                  placeholder="Type your answer here..."
+                  placeholder="Type your answer here or use voice input..."
                   className="w-full h-40 p-4 bg-white/5 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-[#14A44D] resize-none"
                   disabled={isLoading}
                 />
@@ -538,37 +566,17 @@ const MockInterview = () => {
                   Previous
                 </button>
 
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => {
-                      if (listening) {
-                        stop();
-                      } else {
-                        setCurrentAnswer('');
-                        listen();
-                      }
-                    }}
-                    className={`px-4 py-2 rounded-full text-sm transition-colors ${
-                      listening
-                        ? 'bg-red-500 hover:bg-red-600 text-white'
-                        : 'bg-blue-500 hover:bg-blue-600 text-white'
-                    }`}
-                  >
-                    {listening ? '🎤 Listening...' : '🎤 Voice Input'}
-                  </button>
-
-                  <button
-                    onClick={submitAnswer}
-                    disabled={!currentAnswer.trim() || isLoading}
-                    className={`px-8 py-3 rounded-full font-semibold transition-all duration-300 ${
-                      currentAnswer.trim() && !isLoading
-                        ? 'bg-gradient-to-r from-[#14A44D] to-[#5F2EEA] hover:shadow-[#14A44D]/40 hover:scale-105'
-                        : 'bg-gray-600 cursor-not-allowed'
-                    }`}
-                  >
-                    {isLoading ? 'Evaluating...' : currentQuestion >= questions.length - 1 ? 'Complete Interview' : 'Next Question'}
-                  </button>
-                </div>
+                <button
+                  onClick={submitAnswer}
+                  disabled={!currentAnswer.trim() || isLoading}
+                  className={`px-8 py-3 rounded-full font-semibold transition-all duration-300 ${
+                    currentAnswer.trim() && !isLoading
+                      ? 'bg-gradient-to-r from-[#14A44D] to-[#5F2EEA] hover:shadow-[#14A44D]/40 hover:scale-105'
+                      : 'bg-gray-600 cursor-not-allowed'
+                  }`}
+                >
+                  {isLoading ? 'Evaluating...' : currentQuestion >= questions.length - 1 ? 'Complete Interview' : 'Next Question'}
+                </button>
               </div>
             </div>
           </div>
@@ -577,24 +585,52 @@ const MockInterview = () => {
     );
   }
 
-  const generatePDF = async () => {
+  const downloadReport = async () => {
     try {
-      // Generate PDF using AI service
+      // Generate JSON report using AI service
       const response = await axios.post('http://localhost:8000/generate-report', {
         report_data: finalReport
       });
 
-      // Create and download PDF
-      const pdf = new jsPDF();
-      pdf.text(response.data.pdf, 10, 10);
-      pdf.save('mock_interview_report.pdf');
+      // Create and download JSON report
+      const reportData = response.data.report;
+      const blob = new Blob([reportData], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'mock_interview_report.json';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('Error generating PDF:', error);
-      // Fallback: generate simple PDF on client side
-      const pdf = new jsPDF();
-      pdf.text('Mock Interview Report', 20, 20);
-      pdf.text(`Overall Score: ${finalReport?.overallScore}%`, 20, 40);
-      pdf.save('mock_interview_report.pdf');
+      console.error('Error generating report:', error);
+      // Fallback: generate simple JSON report
+      const fallbackReport = {
+        interview_summary: {
+          candidate_role: userRole,
+          total_questions: finalReport?.questionCount || 0,
+          duration: 'N/A',
+          overall_rating: finalReport?.overallScore / 10 || 0
+        },
+        questions: finalReport?.transcript?.map((item) => ({
+          question: item.question,
+          answer_summary: item.transcript || item.answer,
+          feedback: `Clarity: ${item.evaluation.clarity}%, Confidence: ${item.evaluation.confidence}%, Technical: ${item.evaluation.technicalAccuracy}%, Communication: ${item.evaluation.communication}%`,
+          score: Math.floor((item.evaluation.clarity + item.evaluation.confidence + item.evaluation.technicalAccuracy + item.evaluation.communication) / 4)
+        })) || [],
+        recommendations: finalReport?.recommendations || []
+      };
+
+      const blob = new Blob([JSON.stringify(fallbackReport, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'mock_interview_report.json';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
     }
   };
 
@@ -613,14 +649,6 @@ const MockInterview = () => {
             <p className="text-xl text-gray-300 mb-8">
               Great job! Here's your comprehensive feedback report.
             </p>
-            <button
-              onClick={() => speak({
-                text: `Interview completed! Your overall score is ${finalReport?.overallScore}%. You answered ${finalReport?.questionCount} questions. Your eye contact averaged ${finalReport?.visualAnalytics?.avgEyeContact}%. ${finalReport?.recommendations?.slice(0, 2).join('. ')}`
-              })}
-              className="mb-4 px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-full transition-colors"
-            >
-              🔊 Hear Summary
-            </button>
           </div>
 
           {finalReport && (
@@ -714,10 +742,10 @@ const MockInterview = () => {
               <div className="text-center space-y-4">
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <button
-                    onClick={generatePDF}
+                    onClick={downloadReport}
                     className="bg-gradient-to-r from-[#14A44D] to-[#5F2EEA] px-8 py-4 rounded-full text-lg font-semibold hover:shadow-[#14A44D]/40 hover:scale-105 transition-all duration-300"
                   >
-                    Download PDF Report
+                    Download JSON Report
                   </button>
                   <button
                     onClick={resetInterview}

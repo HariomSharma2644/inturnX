@@ -4,6 +4,33 @@ const jwt = require('jsonwebtoken');
 const { body } = require('express-validator');
 const { signup, login, getProfile, createDemoAccount, updateProfile } = require('../controllers/authController');
 const { auth } = require('../middleware/auth');
+const multer = require('multer');
+const path = require('path');
+
+// Configure multer for resume uploads
+const resumeStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/resumes/');
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, req.user.id + '-' + uniqueSuffix + path.extname(file.originalname));
+  }
+});
+
+const uploadResume = multer({
+  storage: resumeStorage,
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype === 'application/pdf') {
+      cb(null, true);
+    } else {
+      cb(new Error('Only PDF files are allowed!'), false);
+    }
+  },
+  limits: {
+    fileSize: 5 * 1024 * 1024 // 5MB limit
+  }
+});
 
 const router = express.Router();
 
@@ -19,7 +46,7 @@ router.post('/signup', signupValidation, signup);
 router.post('/login', login);
 router.post('/demo', createDemoAccount);
 router.get('/profile', auth, getProfile);
-router.put('/profile', auth, updateProfile);
+router.put('/profile', auth, uploadResume.single('resume'), updateProfile);
 
 // OAuth routes
 router.get('/github', passport.authenticate('github', { scope: ['user:email'] }));

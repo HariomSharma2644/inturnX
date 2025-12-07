@@ -2,10 +2,138 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from '../utils/axios';
 import { useAuth } from '../context/AuthContext';
+import BackButton from './BackButton';
+
+// Certificate Component
+const CertificateModal = ({ course, user, onClose }) => {
+  const generateCertificate = () => {
+    const canvas = document.createElement('canvas');
+    canvas.width = 800;
+    canvas.height = 600;
+    const ctx = canvas.getContext('2d');
+
+    // Background gradient
+    const gradient = ctx.createLinearGradient(0, 0, 800, 600);
+    gradient.addColorStop(0, '#0A0A0A');
+    gradient.addColorStop(1, '#1A1A1A');
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, 800, 600);
+
+    // Border
+    ctx.strokeStyle = '#14A44D';
+    ctx.lineWidth = 8;
+    ctx.strokeRect(20, 20, 760, 560);
+
+    // Title
+    ctx.fillStyle = '#FFFFFF';
+    ctx.font = 'bold 36px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText('CERTIFICATE OF COMPLETION', 400, 100);
+
+    // InturnX Logo/Brand
+    ctx.fillStyle = '#5F2EEA';
+    ctx.font = 'bold 24px Arial';
+    ctx.fillText('InturnX Learning Platform', 400, 140);
+
+    // Certificate text
+    ctx.fillStyle = '#FFFFFF';
+    ctx.font = '24px Arial';
+    ctx.fillText('This is to certify that', 400, 200);
+
+    // Student name
+    ctx.fillStyle = '#14A44D';
+    ctx.font = 'bold 32px Arial';
+    ctx.fillText(user?.name || 'Student', 400, 250);
+
+    // Completion text
+    ctx.fillStyle = '#FFFFFF';
+    ctx.font = '20px Arial';
+    ctx.fillText('has successfully completed the course', 400, 300);
+
+    // Course name
+    ctx.fillStyle = '#5F2EEA';
+    ctx.font = 'bold 28px Arial';
+    ctx.fillText(course.title, 400, 340);
+
+    // Skills
+    if (course.skills) {
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = '16px Arial';
+      ctx.fillText(`Skills Acquired: ${course.skills.join(', ')}`, 400, 380);
+    }
+
+    // Date
+    ctx.fillStyle = '#FFFFFF';
+    ctx.font = '18px Arial';
+    ctx.fillText(`Completed on ${new Date().toLocaleDateString()}`, 400, 420);
+
+    // Signature line
+    ctx.strokeStyle = '#FFFFFF';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(200, 480);
+    ctx.lineTo(350, 480);
+    ctx.stroke();
+
+    ctx.fillStyle = '#FFFFFF';
+    ctx.font = '14px Arial';
+    ctx.fillText('InturnX Platform', 275, 500);
+
+    // Download
+    const link = document.createElement('a');
+    link.download = `${course.title.replace(/\s+/g, '_')}_Certificate.png`;
+    link.href = canvas.toDataURL();
+    link.click();
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+      <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-8 max-w-2xl w-full mx-4">
+        <div className="text-center">
+          <div className="w-20 h-20 bg-[#14A44D]/20 rounded-full flex items-center justify-center mx-auto mb-6">
+            <svg className="w-10 h-10 text-[#14A44D]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <h2 className="text-3xl font-bold text-white mb-4">🎉 Congratulations!</h2>
+          <p className="text-gray-300 mb-6">
+            You have successfully completed <span className="text-[#14A44D] font-semibold">{course.title}</span>
+          </p>
+
+          <div className="bg-white/5 rounded-xl p-6 mb-6">
+            <h3 className="text-lg font-semibold text-white mb-3">Skills Acquired:</h3>
+            <div className="flex flex-wrap gap-2 justify-center">
+              {course.skills?.map((skill, index) => (
+                <span key={index} className="bg-[#5F2EEA]/20 text-[#5F2EEA] px-3 py-1 rounded-full text-sm">
+                  {skill}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex gap-4 justify-center">
+            <button
+              onClick={generateCertificate}
+              className="bg-gradient-to-r from-[#14A44D] to-[#5F2EEA] text-white px-8 py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+            >
+              📜 Download Certificate
+            </button>
+            <button
+              onClick={onClose}
+              className="bg-gray-600 text-white px-8 py-3 rounded-xl font-semibold hover:bg-gray-500 transition-colors"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const CourseDetail = () => {
   const { id } = useParams();
-  const { user } = useAuth();
+  const { user } = useAuth(); // eslint-disable-line no-unused-vars
   const [course, setCourse] = useState(null);
   const [currentLesson, setCurrentLesson] = useState(0);
   const [progress, setProgress] = useState(0);
@@ -14,171 +142,46 @@ const CourseDetail = () => {
   const [quizAnswers, setQuizAnswers] = useState({});
   const [quizScore, setQuizScore] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [showCertificate, setShowCertificate] = useState(false);
+
 
   useEffect(() => {
-    fetchCourse();
-  }, [id]);
+    const fetchCourse = async () => {
+      try {
+        const response = await axios.get(`/api/courses/${id}`);
+        setCourse(response.data.course);
+        setProgress(response.data.progress.percentage || 0);
+        setCompletedLessons(response.data.progress.completedModules?.map(m => m.moduleIndex) || []);
+      } catch (error) {
+        console.error('Error fetching course:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const fetchCourse = async () => {
-    try {
-      // Mock course data - in real app, fetch from API
-      const mockCourse = {
-        id: id,
-        title: 'Introduction to JavaScript',
-        description: 'Learn the fundamentals of JavaScript programming',
-        level: 'Beginner',
-        duration: '4 weeks',
-        lessons: [
-          {
-            id: 1,
-            title: 'Variables and Data Types',
-            content: `
-# Variables and Data Types
-
-JavaScript variables are containers for storing data values. You can declare variables using \`var\`, \`let\`, or \`const\`.
-
-## Declaring Variables
-
-\`\`\`javascript
-// Using var (not recommended for modern JS)
-var name = "John";
-
-// Using let (can be reassigned)
-let age = 25;
-age = 26; // This is allowed
-
-// Using const (cannot be reassigned)
-const PI = 3.14159;
-// PI = 3.14; // This would cause an error
-\`\`\`
-
-## Data Types
-
-JavaScript has several built-in data types:
-
-- **String**: Text data (e.g., "Hello World")
-- **Number**: Numeric data (e.g., 42, 3.14)
-- **Boolean**: True/false values
-- **Array**: Ordered list of values
-- **Object**: Collection of key-value pairs
-- **null** and **undefined**: Special values
-
-## Example
-
-\`\`\`javascript
-let name = "Alice";        // String
-let age = 30;             // Number
-let isStudent = true;     // Boolean
-let hobbies = ["reading", "coding"]; // Array
-let person = {            // Object
-  name: "Alice",
-  age: 30
-};
-\`\`\`
-            `,
-            quiz: [
-              {
-                question: "Which keyword is used to declare a constant in JavaScript?",
-                options: ["var", "let", "const", "static"],
-                correct: 2
-              },
-              {
-                question: "What data type is used to store true/false values?",
-                options: ["String", "Number", "Boolean", "Array"],
-                correct: 2
-              }
-            ]
-          },
-          {
-            id: 2,
-            title: 'Functions and Scope',
-            content: `
-# Functions and Scope
-
-Functions are blocks of code designed to perform a particular task. They are executed when they are called (invoked).
-
-## Function Declaration
-
-\`\`\`javascript
-function greet(name) {
-  return "Hello, " + name + "!";
-}
-
-console.log(greet("Alice")); // Output: Hello, Alice!
-\`\`\`
-
-## Function Expression
-
-\`\`\`javascript
-const greet = function(name) {
-  return "Hello, " + name + "!";
-};
-\`\`\`
-
-## Arrow Functions (ES6+)
-
-\`\`\`javascript
-const greet = (name) => {
-  return "Hello, " + name + "!";
-};
-
-// Or more concisely:
-const greet = name => "Hello, " + name + "!";
-\`\`\`
-
-## Scope
-
-Scope determines the accessibility of variables:
-
-- **Global Scope**: Variables declared outside any function
-- **Local Scope**: Variables declared inside a function
-- **Block Scope**: Variables declared with \`let\` or \`const\` inside blocks
-
-\`\`\`javascript
-let globalVar = "I'm global";
-
-function example() {
-  let localVar = "I'm local";
-  if (true) {
-    let blockVar = "I'm block-scoped";
-  }
-  // blockVar is not accessible here
-}
-\`\`\`
-            `,
-            quiz: [
-              {
-                question: "What is the correct syntax for an arrow function?",
-                options: ["function() => {}", "() => function{}", "(param) => {}", "=> (param) {}"],
-                correct: 2
-              }
-            ]
-          }
-        ]
-      };
-      setCourse(mockCourse);
-    } catch (error) {
-      console.error('Failed to fetch course:', error);
-    } finally {
-      setLoading(false);
+    if (id) {
+      fetchCourse();
     }
-  };
+  }, [id]);
 
   const markLessonComplete = async (lessonId) => {
     if (!completedLessons.includes(lessonId)) {
-      setCompletedLessons([...completedLessons, lessonId]);
-      const newProgress = ((completedLessons.length + 1) / course.lessons.length) * 100;
-      setProgress(newProgress);
-
-      // Update progress on server
       try {
-        await axios.post('/api/courses/progress', {
-          courseId: id,
-          lessonId,
-          progress: newProgress
+        await axios.post(`/api/courses/${id}/progress`, {
+          moduleIndex: lessonId,
+          completed: true
         });
+
+        const newCompletedLessons = [...completedLessons, lessonId];
+        setCompletedLessons(newCompletedLessons);
+        const newProgress = (newCompletedLessons.length / course.modules.length) * 100;
+        setProgress(newProgress);
+
+        if (newProgress === 100) {
+          setShowCertificate(true);
+        }
       } catch (error) {
-        console.error('Failed to update progress:', error);
+        console.error('Error updating progress:', error);
       }
     }
   };
@@ -190,18 +193,24 @@ function example() {
   };
 
   const submitQuiz = () => {
-    const currentLessonData = course.lessons[currentLesson];
+    const currentLessonData = course.modules[currentLesson];
     let score = 0;
-    currentLessonData.quiz.forEach((question, index) => {
-      if (quizAnswers[index] === question.correct) {
-        score++;
+    if (currentLessonData.quiz && currentLessonData.quiz.questions) {
+      currentLessonData.quiz.questions.forEach((question, index) => {
+        if (quizAnswers[index] === question.correctAnswer) {
+          score++;
+        }
+      });
+      setQuizScore(score);
+      if (score === currentLessonData.quiz.questions.length) {
+        markLessonComplete(currentLesson);
       }
-    });
-    setQuizScore(score);
-    if (score === currentLessonData.quiz.length) {
-      markLessonComplete(currentLessonData.id);
     }
   };
+
+
+
+
 
   if (loading) {
     return (
@@ -224,10 +233,13 @@ function example() {
     );
   }
 
-  const currentLessonData = course.lessons[currentLesson];
+  const currentLessonData = course.modules[currentLesson];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0A0A0A] to-[#1A1A1A] text-white">
+      <BackButton />
+      {showCertificate && <CertificateModal course={course} user={user} onClose={() => setShowCertificate(false)} />}
+
       {/* Header */}
       <div className="bg-black/20 backdrop-blur-xl border-b border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
@@ -240,6 +252,9 @@ function example() {
                 {course.title}
               </h1>
               <p className="text-gray-400 mt-2">{course.description}</p>
+              <p className="text-gray-400 mt-2">{course.content}</p>
+              <p className="text-gray-400 mt-2">{course.includes}</p>
+              <p className="text-gray-400 mt-2">{course.certificate}</p>
             </div>
             <div className="flex items-center space-x-4">
               <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl px-4 py-2">
@@ -248,7 +263,11 @@ function example() {
               </div>
               <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl px-4 py-2">
                 <span className="text-sm text-gray-400">Level: </span>
-                <span className="text-[#5F2EEA] font-semibold">{course.level}</span>
+                <span className="text-[#5F2EEA] font-semibold">{course.difficulty}</span>
+              </div>
+              <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl px-4 py-2">
+                <span className="text-sm text-gray-400">Duration: </span>
+                <span className="text-[#5F2EEA] font-semibold">{course.duration}</span>
               </div>
             </div>
           </div>
@@ -262,9 +281,9 @@ function example() {
             <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-6 sticky top-8">
               <h3 className="text-lg font-semibold mb-4">Course Content</h3>
               <div className="space-y-2">
-                {course.lessons.map((lesson, index) => (
+                {course.modules.map((module, index) => (
                   <button
-                    key={lesson.id}
+                    key={index}
                     onClick={() => setCurrentLesson(index)}
                     className={`w-full text-left p-3 rounded-xl transition-all duration-300 ${
                       currentLesson === index
@@ -274,23 +293,29 @@ function example() {
                   >
                     <div className="flex items-center space-x-3">
                       <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-semibold ${
-                        completedLessons.includes(lesson.id)
+                        completedLessons.includes(index)
                           ? 'bg-[#14A44D] text-white'
                           : currentLesson === index
                           ? 'bg-[#5F2EEA] text-white'
                           : 'bg-gray-600 text-gray-300'
                       }`}>
-                        {completedLessons.includes(lesson.id) ? '✓' : index + 1}
+                        {completedLessons.includes(index) ? '✓' : index + 1}
                       </div>
                       <span className={`text-sm ${
                         currentLesson === index ? 'text-white font-medium' : 'text-gray-300'
                       }`}>
-                        {lesson.title}
+                        {module.title}
                       </span>
                     </div>
                   </button>
                 ))}
               </div>
+              <button
+                onClick={() => setShowCertificate(true)}
+                className="w-full mt-4 px-6 py-3 bg-gradient-to-r from-[#14A44D] to-[#5F2EEA] text-white rounded-xl font-medium transition-all duration-300 transform hover:scale-105 text-center block"
+              >
+                Generate Certificate
+              </button>
             </div>
           </div>
 
@@ -302,9 +327,14 @@ function example() {
 
                 {/* Lesson Content */}
                 <div className="prose prose-invert max-w-none mb-8">
-                  <pre className="whitespace-pre-wrap text-gray-300 leading-relaxed">
+                  <p className="whitespace-pre-wrap text-gray-300 leading-relaxed">
                     {currentLessonData.content}
-                  </pre>
+                  </p>
+                  {currentLessonData.videoUrl && (
+                    <a href={currentLessonData.videoUrl} target="_blank" rel="noopener noreferrer" className="inline-block mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+                      Watch Video
+                    </a>
+                  )}
                 </div>
 
                 {/* Navigation */}
@@ -318,7 +348,7 @@ function example() {
                   </button>
 
                   <div className="flex space-x-4">
-                    {currentLessonData.quiz && (
+                    {currentLessonData.quiz && currentLessonData.quiz.questions && (
                       <button
                         onClick={startQuiz}
                         className="px-6 py-3 bg-[#5F2EEA] text-white rounded-xl hover:bg-[#5F2EEA]/80 transition-colors"
@@ -328,8 +358,11 @@ function example() {
                     )}
 
                     <button
-                      onClick={() => setCurrentLesson(Math.min(course.lessons.length - 1, currentLesson + 1))}
-                      disabled={currentLesson === course.lessons.length - 1}
+                      onClick={() => {
+                        markLessonComplete(currentLesson);
+                        setCurrentLesson(Math.min(course.modules.length - 1, currentLesson + 1));
+                      }}
+                      disabled={currentLesson === course.modules.length - 1}
                       className="px-6 py-3 bg-[#14A44D] text-white rounded-xl disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#14A44D]/80 transition-colors"
                     >
                       Next Lesson
@@ -340,11 +373,11 @@ function example() {
             ) : (
               /* Quiz Interface */
               <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-8">
-                <h2 className="text-2xl font-bold mb-6">Lesson Quiz</h2>
+                <h2 className="text-2xl font-bold mb-6">Practice Questions</h2>
 
                 {quizScore === null ? (
                   <div className="space-y-6">
-                    {currentLessonData.quiz.map((question, qIndex) => (
+                    {currentLessonData.quiz.questions.map((question, qIndex) => (
                       <div key={qIndex} className="bg-white/5 rounded-xl p-6">
                         <h3 className="text-lg font-medium mb-4">{question.question}</h3>
                         <div className="space-y-2">
@@ -353,10 +386,10 @@ function example() {
                               <input
                                 type="radio"
                                 name={`question-${qIndex}`}
-                                value={oIndex}
+                                value={option}
                                 onChange={(e) => setQuizAnswers({
                                   ...quizAnswers,
-                                  [qIndex]: parseInt(e.target.value)
+                                  [qIndex]: e.target.value
                                 })}
                                 className="text-[#14A44D] focus:ring-[#14A44D]"
                               />
@@ -378,7 +411,7 @@ function example() {
                         onClick={submitQuiz}
                         className="px-6 py-3 bg-[#14A44D] text-white rounded-xl hover:bg-[#14A44D]/80 transition-colors"
                       >
-                        Submit Quiz
+                        Submit
                       </button>
                     </div>
                   </div>
@@ -386,22 +419,22 @@ function example() {
                   /* Quiz Results */
                   <div className="text-center">
                     <div className={`w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6 ${
-                      quizScore === currentLessonData.quiz.length
+                      quizScore === currentLessonData.quiz.questions.length
                         ? 'bg-[#14A44D]/20'
                         : 'bg-[#FF4B2B]/20'
                     }`}>
                       <span className={`text-3xl font-bold ${
-                        quizScore === currentLessonData.quiz.length
+                        quizScore === currentLessonData.quiz.questions.length
                           ? 'text-[#14A44D]'
                           : 'text-[#FF4B2B]'
                       }`}>
-                        {quizScore}/{currentLessonData.quiz.length}
+                        {quizScore}/{currentLessonData.quiz.questions.length}
                       </span>
                     </div>
 
                     <h3 className="text-xl font-semibold mb-4">
-                      {quizScore === currentLessonData.quiz.length
-                        ? 'Perfect! Lesson Completed! 🎉'
+                      {quizScore === currentLessonData.quiz.questions.length
+                        ? 'Great job!'
                         : 'Good try! Review the material and try again.'}
                     </h3>
 
@@ -412,14 +445,6 @@ function example() {
                       >
                         Back to Lesson
                       </button>
-                      {quizScore === currentLessonData.quiz.length && (
-                        <button
-                          onClick={() => setCurrentLesson(Math.min(course.lessons.length - 1, currentLesson + 1))}
-                          className="px-6 py-3 bg-[#14A44D] text-white rounded-xl hover:bg-[#14A44D]/80 transition-colors"
-                        >
-                          Next Lesson
-                        </button>
-                      )}
                     </div>
                   </div>
                 )}

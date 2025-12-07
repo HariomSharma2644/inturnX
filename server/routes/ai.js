@@ -94,4 +94,45 @@ router.post('/chat-mentor', async (req, res) => {
   }
 });
 
+// Generate quiz question
+router.get('/generate-quiz/:language/:level', async (req, res) => {
+  try {
+    const { language, level } = req.params;
+    const levelNum = parseInt(level);
+
+    // Call Python AI service
+    const response = await axios.post(`${AI_SERVICE_URL}/generate_question`, {
+      language,
+      level: levelNum
+    }, {
+      timeout: 30000 // 30 second timeout
+    });
+
+    res.json(response.data);
+  } catch (error) {
+    console.error('Quiz generation error:', error.message);
+    res.status(500).json({ message: 'Failed to generate quiz question' });
+  }
+});
+
+// Quiz explanation
+router.post('/quiz-explain', async (req, res) => {
+  try {
+    const { question, options, correctIndex, selectedIndex, language, level } = req.body;
+
+    // Mock AI explanation based on correctness
+    let explanation = '';
+    if (selectedIndex === correctIndex) {
+      explanation = `Great job! The correct answer is "${options[correctIndex]}". This demonstrates your understanding of advanced ${language} concepts at level ${level}.`;
+    } else {
+      explanation = `The correct answer is "${options[correctIndex]}", but you selected "${options[selectedIndex]}". Review the core concepts in ${language} for level ${level} to strengthen your knowledge.`;
+    }
+
+    res.json({ explanation });
+  } catch (error) {
+    console.error('Quiz explanation error:', error.message);
+    res.status(500).json({ message: 'AI service unavailable' });
+  }
+});
+
 module.exports = router;

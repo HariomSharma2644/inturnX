@@ -16,7 +16,10 @@ import Community from './components/Community';
 import AdminPanel from './components/AdminPanel';
 import ResumeAnalyzer from './components/ResumeAnalyzer';
 import MockInterview from './components/MockInterview';
-import Quiz from './components/Quiz';
+import QuizHome from './components/QuizHome';
+import QuizArena from './components/QuizArena';
+import Leaderboard from './components/Leaderboard';
+import Certificate from './components/Certificate';
 import ApiTest from './components/ApiTest';
 import ProfilePage from './components/ProfilePage';
 import AuthCallback from './components/AuthCallback';
@@ -69,7 +72,6 @@ function App() {
     <AuthProvider>
       <Router>
         <div className="App">
-          <Header />
           <Routes>
             {/* Public routes */}
             <Route path="/" element={<Home />} />
@@ -187,7 +189,39 @@ function App() {
               path="/quiz"
               element={
                 <ProtectedRoute>
-                  <Quiz />
+                  <QuizHome />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/quiz/:language"
+              element={
+                <ProtectedRoute>
+                  <QuizHome />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/quiz/:language/:level"
+              element={
+                <ProtectedRoute>
+                  <QuizArena />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/quiz/leaderboard"
+              element={
+                <ProtectedRoute>
+                  <Leaderboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/certificate/:language"
+              element={
+                <ProtectedRoute>
+                  <Certificate />
                 </ProtectedRoute>
               }
             />

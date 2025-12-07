@@ -40,6 +40,15 @@ const userSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Course'
   }],
+  progress: {
+    type: Map,
+    of: Number, // courseId -> percentage
+    default: new Map()
+  },
+  certificates: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Certificate'
+  }],
   resumeLink: {
     type: String,
     default: ''
@@ -79,6 +88,54 @@ const userSchema = new mongoose.Schema({
   },
   avatar: {
     type: String
+  },
+  // Battle Arena fields
+  rating: {
+    type: Number,
+    default: 1200
+  },
+  battleStats: {
+    totalBattles: {
+      type: Number,
+      default: 0
+    },
+    wins: {
+      type: Number,
+      default: 0
+    },
+    losses: {
+      type: Number,
+      default: 0
+    },
+    draws: {
+      type: Number,
+      default: 0
+    },
+    winRate: {
+      type: Number,
+      default: 0
+    },
+    currentStreak: {
+      type: Number,
+      default: 0
+    },
+    bestStreak: {
+      type: Number,
+      default: 0
+    },
+    totalTimeSpent: {
+      type: Number,
+      default: 0 // in seconds
+    },
+    averageSolveTime: {
+      type: Number,
+      default: 0 // in seconds
+    }
+  },
+  rank: {
+    type: String,
+    enum: ['Beginner', 'Intermediate', 'Advanced', 'Expert', 'Master', 'Grandmaster'],
+    default: 'Beginner'
   }
 }, {
   timestamps: true

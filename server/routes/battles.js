@@ -1,166 +1,218 @@
 const express = require('express');
 const router = express.Router();
-const { problems } = require('../problems');
-const judge0Client = require('../utils/judge0');
-
-// Get available battles (now returns coding problems)
-router.get('/', async (req, res) => {
-  try {
-    // Convert problems to battle format
-    const battles = problems.map(problem => ({
-      id: problem.id,
-      title: problem.title,
-      difficulty: problem.difficulty,
-      description: problem.description,
-      timeLimit: 1800, // 30 minutes default
-      players: Math.floor(Math.random() * 4), // Mock active players
-      maxPlayers: 4,
-      status: 'active',
-      category: problem.category,
-      examples: problem.examples,
-      constraints: problem.constraints
-    }));
-
-    res.json({ battles });
-  } catch (error) {
-    console.error('Error fetching battles:', error);
-    res.status(500).json({ message: 'Server error' });
-  }
-});
-
-// Get specific battle/problem details
-router.get('/:battleId', async (req, res) => {
-  try {
-    const { battleId } = req.params;
-    const problem = problems.find(p => p.id === battleId);
-
-    if (!problem) {
-      return res.status(404).json({ message: 'Battle not found' });
-    }
-
-    const battle = {
-      id: problem.id,
-      title: problem.title,
-      difficulty: problem.difficulty,
-      description: problem.description,
-      timeLimit: 1800,
-      category: problem.category,
-      examples: problem.examples,
-      constraints: problem.constraints,
-      supportedLanguages: Object.keys(problem.languages)
-    };
-
-    res.json({ battle });
-  } catch (error) {
-    console.error('Error fetching battle:', error);
-    res.status(500).json({ message: 'Server error' });
-  }
-});
-
-// Create new battle
-router.post('/', async (req, res) => {
-  try {
-    const { title, description, difficulty, timeLimit, maxPlayers } = req.body;
-
-    // In real app, save to database
-    const battle = {
-      id: `battle-${Date.now()}`,
-      title,
-      description,
-      difficulty,
-      timeLimit,
-      players: 0,
-      maxPlayers,
-      status: 'active',
-      createdAt: new Date()
-    };
-
-    res.status(201).json({ battle });
-  } catch (error) {
-    console.error('Error creating battle:', error);
-    res.status(500).json({ message: 'Server error' });
-  }
-});
-
-// Submit battle solution
-router.post('/:battleId/submit', async (req, res) => {
-  try {
-    const { battleId } = req.params;
-    const { code, language } = req.body;
-    const userId = req.user?.id;
-
-    // Find the problem
-    const problem = problems.find(p => p.id === battleId);
-    if (!problem) {
-      return res.status(404).json({ message: 'Battle not found' });
-    }
-
-    // Check if language is supported
-    if (!problem.languages[language]) {
-      return res.status(400).json({ message: `Language ${language} not supported for this problem` });
-    }
-
-    // Run test cases using Judge0
-    const testResults = await judge0Client.runTestCases(code, language, problem.testCases);
-
-    const result = {
-      battleId,
-      userId,
-      code,
-      language,
-      status: testResults.summary.status,
-      score: testResults.summary.score,
-      executionTime: testResults.summary.totalTime,
-      memoryUsed: testResults.summary.maxMemory,
-      testResults: testResults.results,
-      submittedAt: new Date()
-    };
-
-    res.json({ result });
-  } catch (error) {
-    console.error('Error submitting solution:', error);
-    res.status(500).json({ message: 'Server error during code execution' });
-  }
-});
+const Battle = require('../models/Battle');
+const BattleResult = require('../models/BattleResult');
+const { auth } = require('../middleware/auth');
 
 // Get leaderboard
-router.get('/leaderboard', async (req, res) => {
+router.get('/leaderboard', auth, async (req, res) => {
   try {
-    // Mock leaderboard - in real app, fetch from database
-    const leaderboard = [
-      { id: '1', name: 'CodeMaster', rating: 1850, wins: 45, totalBattles: 50, winRate: 90 },
-      { id: '2', name: 'AlgoQueen', rating: 1720, wins: 38, totalBattles: 45, winRate: 84 },
-      { id: '3', name: 'DevWarrior', rating: 1680, wins: 42, totalBattles: 55, winRate: 76 },
-      { id: '4', name: 'LogicLord', rating: 1650, wins: 35, totalBattles: 48, winRate: 73 },
-      { id: '5', name: 'SyntaxSage', rating: 1620, wins: 40, totalBattles: 60, winRate: 67 }
-    ];
+    const userId = req.user.id;
 
-    res.json({ leaderboard });
+    // Get all battle results for leaderboard calculation
+    const battleResults = await BattleResult.find({})
+      .populate('players.userId', 'name')
+      .sort({ createdAt: -1 })
+      .limit(1000);
+
+    // Calculate leaderboard stats
+    const playerStats = new Map();
+
+    battleResults.forEach(result => {
+      result.players.forEach(player => {
+        const id = player.userId._id.toString();
+        if (!playerStats.has(id)) {
+          playerStats.set(id, {
+            id,
+            name: player.userName,
+            rating: player.ratingAfter,
+            wins: 0,
+            losses: 0,
+            totalBattles: 0,
+            winRate: 0
+          });
+        }
+
+        const stats = playerStats.get(id);
+        stats.totalBattles += 1;
+
+        if (player.result === 'win') {
+          stats.wins += 1;
+        } else if (player.result === 'loss') {
+          stats.losses += 1;
+        }
+
+        // Update to latest rating
+        stats.rating = player.ratingAfter;
+        stats.winRate = Math.round((stats.wins / stats.totalBattles) * 100);
+      });
+    });
+
+    // Convert to array and sort by rating
+    const leaderboard = Array.from(playerStats.values())
+      .sort((a, b) => b.rating - a.rating)
+      .slice(0, 50); // Top 50 players
+
+    res.json({
+      success: true,
+      leaderboard
+    });
+
   } catch (error) {
     console.error('Error fetching leaderboard:', error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch leaderboard'
+    });
   }
 });
 
-// Get user stats
-router.get('/stats', async (req, res) => {
+// Get user battle statistics
+router.get('/stats', auth, async (req, res) => {
   try {
-    // Mock user stats - in real app, fetch from database based on user ID
-    const stats = {
-      wins: 12,
-      losses: 8,
-      totalBattles: 20,
-      winRate: 60,
-      currentStreak: 3,
-      bestStreak: 7,
-      rating: 1450,
-      rank: 'Intermediate'
-    };
+    const userId = req.user.id;
 
-    res.json({ stats });
+    // Get all battle results for this user
+    const battleResults = await BattleResult.find({
+      'players.userId': userId
+    }).sort({ createdAt: -1 });
+
+    let totalBattles = 0;
+    let wins = 0;
+    let losses = 0;
+    let draws = 0;
+    let currentRating = 1200; // Default rating
+    let totalRatingChange = 0;
+
+    battleResults.forEach(result => {
+      const playerData = result.players.find(p => p.userId.toString() === userId.toString());
+      if (playerData) {
+        totalBattles += 1;
+        currentRating = playerData.ratingAfter;
+        totalRatingChange += playerData.ratingChange;
+
+        if (playerData.result === 'win') wins += 1;
+        else if (playerData.result === 'loss') losses += 1;
+        else if (playerData.result === 'draw') draws += 1;
+      }
+    });
+
+    const winRate = totalBattles > 0 ? Math.round((wins / totalBattles) * 100) : 0;
+
+    res.json({
+      success: true,
+      stats: {
+        totalBattles,
+        wins,
+        losses,
+        draws,
+        winRate,
+        currentRating,
+        totalRatingChange
+      }
+    });
+
   } catch (error) {
     console.error('Error fetching user stats:', error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch user statistics'
+    });
+  }
+});
+
+// Get user's recent battles
+router.get('/history', auth, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    const battleResults = await BattleResult.find({
+      'players.userId': userId
+    })
+    .populate('players.userId', 'name')
+    .sort({ createdAt: -1 })
+    .skip(skip)
+    .limit(limit);
+
+    const formattedResults = battleResults.map(result => {
+      const userPlayer = result.players.find(p => p.userId._id.toString() === userId.toString());
+      const opponent = result.players.find(p => p.userId._id.toString() !== userId.toString());
+
+      return {
+        id: result._id,
+        battleId: result.battleId,
+        result: userPlayer.result,
+        ratingChange: userPlayer.ratingChange,
+        ratingAfter: userPlayer.ratingAfter,
+        opponent: {
+          name: opponent.userName,
+          rating: opponent.ratingBefore
+        },
+        problem: result.problem,
+        duration: result.duration,
+        completedAt: result.completedAt,
+        battleType: result.battleType
+      };
+    });
+
+    res.json({
+      success: true,
+      battles: formattedResults,
+      pagination: {
+        page,
+        limit,
+        hasMore: battleResults.length === limit
+      }
+    });
+
+  } catch (error) {
+    console.error('Error fetching battle history:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch battle history'
+    });
+  }
+});
+
+// Get battle details
+router.get('/:battleId', auth, async (req, res) => {
+  try {
+    const { battleId } = req.params;
+    const userId = req.user.id;
+
+    const battleResult = await BattleResult.findOne({ battleId })
+      .populate('players.userId', 'name');
+
+    if (!battleResult) {
+      return res.status(404).json({
+        success: false,
+        message: 'Battle not found'
+      });
+    }
+
+    // Check if user participated in this battle
+    const userParticipated = battleResult.players.some(p => p.userId._id.toString() === userId.toString());
+    if (!userParticipated) {
+      return res.status(403).json({
+        success: false,
+        message: 'Access denied'
+      });
+    }
+
+    res.json({
+      success: true,
+      battle: battleResult
+    });
+
+  } catch (error) {
+    console.error('Error fetching battle details:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch battle details'
+    });
   }
 });
 

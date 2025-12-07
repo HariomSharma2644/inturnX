@@ -183,3 +183,12 @@ def evaluate_code(code, language):
         dict: Evaluation results
     """
     return analyze_code_quality(code, language)
+
+if __name__ == '__main__':
+    import sys
+    import json
+
+    language = sys.argv[1]
+    code_to_evaluate = sys.stdin.read()
+    evaluation_result = evaluate_code(code_to_evaluate, language)
+    print(json.dumps(evaluation_result, indent=4))

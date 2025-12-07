@@ -158,19 +158,25 @@ const updateProfile = async (req, res) => {
     const userId = req.user.id;
     const { name, email, bio, skills, github, linkedin, portfolio, location, role } = req.body;
 
+    const updateData = {
+      name,
+      email,
+      bio,
+      skills,
+      github,
+      linkedin,
+      portfolio,
+      location,
+      role
+    };
+
+    if (req.file) {
+      updateData.resumeLink = `/uploads/resumes/${req.file.filename}`;
+    }
+
     const updatedUser = await User.findByIdAndUpdate(
       userId,
-      {
-        name,
-        email,
-        bio,
-        skills,
-        github,
-        linkedin,
-        portfolio,
-        location,
-        role
-      },
+      updateData,
       { new: true }
     );
 
@@ -190,7 +196,8 @@ const updateProfile = async (req, res) => {
         github: updatedUser.github,
         linkedin: updatedUser.linkedin,
         portfolio: updatedUser.portfolio,
-        location: updatedUser.location
+        location: updatedUser.location,
+        resumeLink: updatedUser.resumeLink
       }
     });
   } catch (error) {
